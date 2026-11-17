@@ -1,0 +1,1227 @@
+{
+  "users": [
+    {
+      "id": "user-maria-santos",
+      "name": "Joshua Abella Laurio",
+      "email": "resident@bugo.gov.ph",
+      "passwordHash": "$2b$12$IlBTp2EvnMHuo8nghCQMJerJF5cGDkOxmhfpGtDZAF3kljixrqINm",
+      "role": "resident",
+      "contactNumber": "09175554321",
+      "purok": "Zone 3 - Suntingcahon Valley",
+      "address": "Block 4 Lot 12, Suntingcahon Valley, Barangay Bugo, Cagayan de Oro City",
+      "residentIdNumber": "BG-2026-04829",
+      "isVerified": true,
+      "registrationStatus": "Verified",
+      "isBanned": false,
+      "registeredDate": "2025-03-14",
+      "nationality": "Filipino",
+      "occupation": "Self-Employed / Market Vendor",
+      "householdIncome": "₱8,500.00 (Informal / Low Income)",
+      "familyMembersCount": 4,
+      "voterStatus": "Registered",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Joshua&top=shortFlat&facialHair=beardLight&clothing=collarAndSweater&backgroundColor=b6e3f4"
+    },
+    {
+      "id": "admin-juan-delacruz",
+      "name": "Brgy. Bugo Admin",
+      "email": "admin@bugo.gov.ph",
+      "passwordHash": "$2b$12$qei7FUZJQpiM3/Q/onQHMOC9NpW0EC18/M/LuOXNT/tVKYuUcMeta",
+      "role": "admin",
+      "contactNumber": "09171110000",
+      "purok": "Zone 1 - Centro Riverside",
+      "address": "Barangay Bugo Administrative Complex, Cagayan de Oro City",
+      "residentIdNumber": "BG-ADMIN-001",
+      "isVerified": true,
+      "registrationStatus": "Verified",
+      "isBanned": false,
+      "registeredDate": "2020-01-01",
+      "nationality": "Filipino",
+      "occupation": "Barangay Administrator & Secretary",
+      "familyMembersCount": 1,
+      "voterStatus": "Registered",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=AdminCapitan&top=shortRound&facialHair=moustacheMagnum&clothing=blazerAndShirt&backgroundColor=d1d4f9"
+    }
+  ],
+  "programs": [
+    {
+      "id": "prog-admin-business-permit",
+      "title": "Business Permit Endorsement",
+      "category": "Barangay Administrative Services",
+      "tagline": "Barangay commercial clearance endorsement required for City Hall Mayor’s Business Permit.",
+      "description": "Administrative assessment and environmental clearance inspection for sari-sari stores, retail enterprises, food stalls, and commercial establishments operating within Bugo.",
+      "imageUrl": "/assets/services/real_barangay_hall_1788172230992.jpg",
+      "status": "Active",
+      "badgeText": "Commercial Clearance",
+      "deadline": "Annual Renewal & New Registrations",
+      "targetAudience": "Micro, Small, & Medium Enterprise Owners",
+      "processingTime": "2 - 3 Business Days",
+      "maxBenefitAmount": "Official Regulatory Clearance",
+      "requirements": [
+        "DTI Business Name Registration or SEC Certificate",
+        "Lease Contract or Proof of Property Ownership",
+        "Fire Safety Inspection and Sanitation Endorsement"
+      ],
+      "eligibilityCriteria": [
+        "Business establishment located within Barangay Bugo",
+        "Compliance with local zoning and environmental waste disposal ordinances"
+      ]
+    },
+    {
+      "id": "prog-admin-first-job",
+      "title": "First-Time Job Seeker Certification",
+      "category": "Barangay Administrative Services",
+      "tagline": "Republic Act 11261 waiver granting 100% free government clearances and certificates for new graduates.",
+      "description": "Under the First-Time Jobseekers Assistance Act, this certification waives fees for NBI Clearance, Police Clearance, Barangay Clearance, Medical Certificates, and Birth Certificates when seeking first-time employment.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "RA 11261 Mandated",
+      "deadline": "Valid for 1 Year from Issuance",
+      "targetAudience": "Recent Graduates & First-Time Job Seekers",
+      "processingTime": "Same Day Issuance",
+      "maxBenefitAmount": "Full Fee Exemption",
+      "requirements": [
+        "School Diploma, Transcript, or Certificate of Graduation",
+        "Barangay Resident ID or Proof of Bugo Address",
+        "Signed Oath of Undertaking for First-Time Job Seekers"
+      ],
+      "eligibilityCriteria": [
+        "First-time entrant to the formal job market",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-admin-good-moral",
+      "title": "Certificate of Good Moral Character",
+      "category": "Barangay Administrative Services",
+      "tagline": "Attestation of good civic behavior, community standing, and law-abiding citizenship.",
+      "description": "Documentary proof required by universities, scholarship foundations, security agencies, and prospective employers confirming the applicant possesses exemplary community conduct.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Verified Conduct",
+      "deadline": "Continuous",
+      "targetAudience": "Students, Job Applicants, and Professionals",
+      "processingTime": "1 - 2 Business Days",
+      "maxBenefitAmount": "Official Endorsement",
+      "requirements": [
+        "Valid Government ID",
+        "Barangay Clearance copy",
+        "2 Character Reference sign-offs from neighbors or Purok Officer"
+      ],
+      "eligibilityCriteria": [
+        "Clean barangay record with no administrative sanctions or peace violations",
+        "Verified resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-admin-indigency",
+      "title": "Certificate of Indigency",
+      "category": "Barangay Administrative Services",
+      "tagline": "Affidavit of indigent economic status for legal aid, medical fee waivers, and government relief.",
+      "description": "Free official certification confirming that the family belongs to the low-income bracket. Used to request medical subsidy at Northern Mindanao Medical Center (NMMC), JR Borja General Hospital, PAO legal services, and DSWD assistance.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "100% Free",
+      "deadline": "Year-Round Service",
+      "targetAudience": "Low-income and indigent families",
+      "processingTime": "Within 24 Hours",
+      "maxBenefitAmount": "Fee Exemption Granted",
+      "requirements": [
+        "Valid Resident ID or Voter Certification",
+        "Endorsement from Purok / Zone Chairman",
+        "Affidavit of Low Income or Certificate of Non-Filing of ITR"
+      ],
+      "eligibilityCriteria": [
+        "Household monthly income at or below statutory poverty threshold",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-admin-residency",
+      "title": "Certificate of Residency",
+      "category": "Barangay Administrative Services",
+      "tagline": "Formal proof of physical residence within the territorial jurisdiction of Barangay Bugo.",
+      "description": "Official certification verifying that the individual currently resides in a specific Purok/Zone of Bugo. Commonly needed for court filings, electric/water utility meter applications, and school enrollments.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Express Release",
+      "deadline": "Ongoing Availability",
+      "targetAudience": "Homeowners, Renters, and Bugo Dwellers",
+      "processingTime": "1 - 2 Business Hours",
+      "maxBenefitAmount": "Standard Certification",
+      "requirements": [
+        "Valid Government ID with Bugo address",
+        "Purok Leader Endorsement / Sitio Clearance",
+        "Proof of Billing or House Rental Contract"
+      ],
+      "eligibilityCriteria": [
+        "Currently living in Barangay Bugo",
+        "Minimum residence duration of 3 months"
+      ]
+    },
+    {
+      "id": "prog-barangay-clearance",
+      "title": "Issuance of Barangay Clearance",
+      "category": "Barangay Administrative Services",
+      "tagline": "Official certification certifying residency, good character, and clean barangay record.",
+      "description": "Universal administrative document required for employment, passport application, bank account opening, postal ID, and government transactions in Cagayan de Oro City.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Instant Pipeline",
+      "deadline": "Year-Round Service",
+      "targetAudience": "All Registered Bugo Residents",
+      "processingTime": "Same Day (1-2 Hours)",
+      "maxBenefitAmount": "Standard Fee: ₱50.00 (Waived for Indigents)",
+      "requirements": [
+        "Valid Government ID or Student ID",
+        "Community Tax Certificate (Cedula)",
+        "Proof of Residency (Zone 1 to 10 of Bugo)"
+      ],
+      "eligibilityCriteria": [
+        "Bona fide resident of Barangay Bugo for at least 6 months",
+        "Verified Barangay Bugo resident in good community standing"
+      ]
+    },
+    {
+      "id": "prog-cert-pwd",
+      "title": "PWD Barangay Endorsement & Certification (RA 10754)",
+      "category": "Barangay Administrative Services",
+      "tagline": "Official certification endorsing Persons with Disabilities for National PWD ID and discounts.",
+      "description": "Official attestation confirming the applicant has a permanent physical, sensory, or psychosocial impairment and resides in Bugo. Required for City Social Welfare PWD ID card issuance and 20% discount booklet.",
+      "imageUrl": "/assets/services/brgy_pwd_wheelchair_1794197737143.jpg",
+      "status": "Active",
+      "badgeText": "RA 10754 Mandated",
+      "deadline": "Continuous Enrollment",
+      "targetAudience": "Children and Adults with Disabilities",
+      "processingTime": "Same Day (1-2 Hours)",
+      "maxBenefitAmount": "Official PWD Certification",
+      "requirements": [
+        "Medical Certificate with Disability Assessment from a licensed physician",
+        "Barangay Resident ID or Proof of Bugo Address",
+        "2 copies 2x2 recent ID photos"
+      ],
+      "eligibilityCriteria": [
+        "Diagnosed with physical, sensory, cognitive, or psychological disability",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-cert-senior-citizen",
+      "title": "Senior Citizen Barangay Endorsement & Certification",
+      "category": "Barangay Administrative Services",
+      "tagline": "Formal endorsement and certification of elderly status for OSCA ID and social pension benefits.",
+      "description": "Barangay certification attesting that the resident is aged 60 and above, residing within Bugo. Used for OSCA Booklet issuance, PhilHealth senior lifetime membership, and local birthday cash gifts.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "Senior Citizen OSCA",
+      "deadline": "Continuous Registration",
+      "targetAudience": "Senior Citizens (Aged 60+)",
+      "processingTime": "Same Day Issuance",
+      "maxBenefitAmount": "Official OSCA Endorsement",
+      "requirements": [
+        "PSA Birth Certificate or Proof of Age (60 years old and above)",
+        "Barangay Resident ID Card or Voter Certification",
+        "2 copies 2x2 recent ID photos"
+      ],
+      "eligibilityCriteria": [
+        "Filipino citizen residing in Barangay Bugo",
+        "Must be 60 years of age or older"
+      ]
+    },
+    {
+      "id": "prog-cert-solo-parent",
+      "title": "Solo Parent Barangay Certification (RA 11861)",
+      "category": "Barangay Administrative Services",
+      "tagline": "Official certification certifying Solo Parent status under the Expanded Solo Parents Welfare Act.",
+      "description": "Mandatory certificate needed to claim the ₱1,000 monthly city cash subsidy, 7-day parental leave, education scholarship priorities, and government relief for solo mothers and fathers.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "RA 11861 Welfare",
+      "deadline": "Year-Round Intake",
+      "targetAudience": "Solo / Single Parents Parenting Dependents in Bugo",
+      "processingTime": "Same Day Issuance",
+      "maxBenefitAmount": "Official RA 11861 Certification",
+      "requirements": [
+        "Affidavit of Solo Parenting (detailing abandonment, separation, or widowhood)",
+        "Birth Certificate of dependent children (unmarried & below 22)",
+        "Valid Government ID or Barangay Resident ID"
+      ],
+      "eligibilityCriteria": [
+        "Sole financial and physical custody of minor or dependent children",
+        "Registered resident of Barangay Bugo",
+        "Household income not exceeding statutory threshold"
+      ]
+    },
+    {
+      "id": "prog-cert-student-grant",
+      "title": "Student Barangay Certification & Fee Waiver Endorsement",
+      "category": "Barangay Administrative Services",
+      "tagline": "Official certification certifying active student status for fee waivers and academic grants.",
+      "description": "Documentary certification required by tertiary institutions, TESDA academies, and CHED scholarship boards to verify active student residency in Bugo for student fare discounts and educational stipends.",
+      "imageUrl": "/assets/services/brgy_daycare_learning_1794197756426.jpg",
+      "status": "Active",
+      "badgeText": "Student Clearance",
+      "deadline": "Continuous Semester Processing",
+      "targetAudience": "Elementary, High School, College, & Vocational Students",
+      "processingTime": "Same Day Issuance",
+      "maxBenefitAmount": "Free Student Endorsement",
+      "requirements": [
+        "Valid School ID or Certificate of Registration (COR)",
+        "Barangay Resident ID or Proof of Address",
+        "Latest Report Card or Transcript of Records"
+      ],
+      "eligibilityCriteria": [
+        "Currently enrolled in an accredited public or private school/college",
+        "Bona fide resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-civil-birth",
+      "title": "Birth Certificate Registration Assistance",
+      "category": "Civil Registration Services",
+      "tagline": "Timely registration assistance for newborns born within Barangay Bugo to the City Civil Registry.",
+      "description": "Guidance and document verification for Certificate of Live Birth (COLB) within the standard 30-day statutory period. Prevents late registration penalties and ensures accurate legal identity.",
+      "imageUrl": "/assets/services/brgy_vaccine_child_1794197736182.jpg",
+      "status": "Active",
+      "badgeText": "Timely Civil Registry",
+      "deadline": "Within 30 Days of Delivery",
+      "targetAudience": "Parents of Newborn Infants",
+      "processingTime": "1 - 2 Business Days",
+      "maxBenefitAmount": "Free Registration Assistance",
+      "requirements": [
+        "Certificate of Live Birth signed by Doctor or Midwife",
+        "Marriage Certificate of Parents (if married)",
+        "Affidavit of Admission of Paternity (if unmarried)",
+        "Valid IDs of both Parents"
+      ],
+      "eligibilityCriteria": [
+        "Child born in Barangay Bugo or parents residing in Bugo",
+        "Submitted within 30 days of child birth"
+      ]
+    },
+    {
+      "id": "prog-civil-death",
+      "title": "Death Registration Assistance",
+      "category": "Civil Registration Services",
+      "tagline": "Certificate of Death processing, municipal cemetery burial clearance, and mortuary assistance.",
+      "description": "Expedited processing of Certificate of Death with the local civil registrar, issuance of barangay burial permit, and coordination with local cemeteries and mortuary financial aid programs.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Immediate Civil Filing",
+      "deadline": "Within 48 Hours of Passing",
+      "targetAudience": "Bereaved Families in Bugo",
+      "processingTime": "Same Day Expedited",
+      "maxBenefitAmount": "Burial Permit & Mortuary Referral",
+      "requirements": [
+        "Certificate of Death signed by attending physician or City Health Officer",
+        "Valid ID of Informant / Immediate Family Member",
+        "Barangay Certificate of Residency of the deceased"
+      ],
+      "eligibilityCriteria": [
+        "Deceased was a resident of Barangay Bugo or passing occurred in Bugo",
+        "Authorized surviving relative filing report"
+      ]
+    },
+    {
+      "id": "prog-civil-late-birth",
+      "title": "Late Birth Registration Assistance",
+      "category": "Civil Registration Services",
+      "tagline": "Delayed birth registration endorsements, negative PSA certificate verification, and affidavits.",
+      "description": "Legal document assistance for individuals whose births were never registered with the Philippine Statistics Authority (PSA). Essential for obtaining National ID, passports, and school enrollment.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Delayed Registry Aid",
+      "deadline": "Year-Round Service",
+      "targetAudience": "Unregistered Youth and Adults",
+      "processingTime": "5 - 7 Business Days",
+      "maxBenefitAmount": "Document Packaging & Endorsement",
+      "requirements": [
+        "PSA Negative Certification of Birth",
+        "Joint Affidavit of Two Disinterested Persons who witnessed birth",
+        "Baptismal Certificate or Elementary School Form 137",
+        "Barangay Certificate of Residency"
+      ],
+      "eligibilityCriteria": [
+        "Born in Barangay Bugo without an existing PSA birth record",
+        "Resident of Bugo"
+      ]
+    },
+    {
+      "id": "prog-civil-marriage",
+      "title": "Marriage Registration Assistance",
+      "category": "Civil Registration Services",
+      "tagline": "Pre-marriage counseling compliance, marriage license filing, and Kasalang Bayan coordination.",
+      "description": "Assistance for engaged couples seeking civil marriage license documentation, compliance with Pre-Marriage Orientation and Counseling (PMOC), and enrollment in mass wedding ceremonies.",
+      "imageUrl": "/assets/services/brgy_civil_wedding_1794197758046.jpg",
+      "status": "Active",
+      "badgeText": "Marriage Registry",
+      "deadline": "Ongoing & Kasalang Bayan Cycles",
+      "targetAudience": "Engaged Couples Residing in Bugo",
+      "processingTime": "3 - 5 Business Days",
+      "maxBenefitAmount": "Endorsement & Kasalang Bayan Access",
+      "requirements": [
+        "PSA Birth Certificates of both partners",
+        "Certificate of No Marriage Record (CENOMAR) from PSA",
+        "Pre-Marriage Counseling (PMC) Certificate",
+        "Barangay Certificate of Residency for both parties"
+      ],
+      "eligibilityCriteria": [
+        "At least one party must be a legal resident of Barangay Bugo",
+        "Legal capacity to contract marriage under Philippine Family Code"
+      ]
+    },
+    {
+      "id": "prog-educational-assistance",
+      "title": "Scholarship Assistance and Inquiries",
+      "category": "Social Welfare Services",
+      "tagline": "Barangay Bugo College Financial Grant and facilitation of Cagayan de Oro City College scholarships.",
+      "description": "Semester cash subsidy providing tuition and textbook support to deserving tertiary, vocational (TESDA), and senior high school students maintaining passing academic records.",
+      "imageUrl": "/assets/services/brgy_youth_sports_1794197737990.jpg",
+      "status": "Active",
+      "badgeText": "₱5,000.00 Grant",
+      "deadline": "December 15, 2026",
+      "targetAudience": "College, University, & Vocational Students",
+      "processingTime": "3 - 5 Business Days",
+      "maxBenefitAmount": "₱5,000.00 / Semester",
+      "requirements": [
+        "Certificate of Registration (COR) / Enrollment Form",
+        "Certificate of Indigency from Barangay Bugo",
+        "Valid School ID",
+        "Latest Semester Grades (GWA 83% or above with no failing grades)"
+      ],
+      "eligibilityCriteria": [
+        "Enrolled in an accredited CHED/TESDA university or technical institute",
+        "Household monthly income not exceeding ₱15,000.00",
+        "Resident of Barangay Bugo for at least 1 year"
+      ]
+    },
+    {
+      "id": "prog-emergency-community-activities",
+      "title": "Community Programs and Activities",
+      "category": "Community and Emergency Services",
+      "tagline": "Youth SK basketball leagues, coastal clean-ups, tree planting, and cultural fiesta celebrations.",
+      "description": "Civic enrichment activities promoting environmental sustainability, community solidarity, sports development, anti-drug awareness seminars, and vibrant cultural festivities in Barangay Bugo.",
+      "imageUrl": "/assets/services/brgy_youth_sports_1794197737990.jpg",
+      "status": "Active",
+      "badgeText": "Civic Programs",
+      "deadline": "Seasonal & Event Calendars",
+      "targetAudience": "Youth, SK Members, Families, & Civic Groups",
+      "processingTime": "Open Registration per Event",
+      "maxBenefitAmount": "Community Sports, Medals & Participation",
+      "requirements": [
+        "Barangay Resident ID or SK Youth Registration Form",
+        "Signed event participant waiver (for sports events)"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Open to all community members"
+      ]
+    },
+    {
+      "id": "prog-emergency-disaster-prep",
+      "title": "Disaster Preparedness and Response",
+      "category": "Community and Emergency Services",
+      "tagline": "BDRRMC typhoon monitoring, flood alert sirens, emergency rescue dispatch, and risk mapping.",
+      "description": "Barangay Disaster Risk Reduction and Management Council (BDRRMC) 24/7 command operation coordinating emergency communications, flood monitoring for Bugo river waterways, and swift water rescue dispatch.",
+      "imageUrl": "/assets/services/brgy_disaster_rescue_1794197713383.jpg",
+      "status": "Active",
+      "badgeText": "24/7 BDRRMC Alert",
+      "deadline": "24/7 Emergency Dispatch",
+      "targetAudience": "All Bugo Puroks, Coastal & Riverine Zones",
+      "processingTime": "Immediate Response",
+      "maxBenefitAmount": "Emergency Rescue & First Aid",
+      "requirements": [
+        "Emergency location and contact person",
+        "Nature of emergency (Flood, Landslide, Fire, Medical)"
+      ],
+      "eligibilityCriteria": [
+        "Any emergency or disaster incident within Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-emergency-evacuation",
+      "title": "Evacuation Assistance",
+      "category": "Community and Emergency Services",
+      "tagline": "Pre-emptive evacuation transport, shelter management, hot meals, and family reunification.",
+      "description": "Organized emergency vehicles and designated Bugo evacuation shelters (Bugo Covered Court, Bugo Central School) equipped with emergency generator sets, sleeping cots, sanitation, and relief supply storage.",
+      "imageUrl": "/assets/services/brgy_disaster_rescue_1794197713383.jpg",
+      "status": "Active",
+      "badgeText": "Shelter & Transport",
+      "deadline": "Active During Severe Weather & Calamities",
+      "targetAudience": "Residents in Flood-Prone & High-Risk Zones",
+      "processingTime": "Immediate Priority Dispatch",
+      "maxBenefitAmount": "Safe Shelter, Hot Meals & Transport",
+      "requirements": [
+        "Purok location & number of vulnerable family members (Infants, PWD, Seniors)"
+      ],
+      "eligibilityCriteria": [
+        "Families threatened by floodwaters, typhoon storm surge, or fire"
+      ]
+    },
+    {
+      "id": "prog-emergency-safety-tanod",
+      "title": "Community Safety and Security Coordination",
+      "category": "Community and Emergency Services",
+      "tagline": "24/7 Barangay Tanod patrols, night security escorts, curfew monitoring, and police coordination.",
+      "description": "Barangay Peacekeeping Action Team (BPAT) conducting motorized mobile patrols, maintaining peace in commercial alleys, securing public transport hubs, and deterring nighttime criminal activity.",
+      "imageUrl": "/assets/services/brgy_disaster_rescue_1794197713383.jpg",
+      "status": "Active",
+      "badgeText": "24/7 BPAT Tanod",
+      "deadline": "Round-the-Clock Patrols",
+      "targetAudience": "All Neighborhoods, Business Strips, & Puroks",
+      "processingTime": "Immediate Field Dispatch",
+      "maxBenefitAmount": "Patrol & Law Enforcement Coordination",
+      "requirements": [
+        "Incident location / Purok",
+        "Caller identity or anonymous security alert details"
+      ],
+      "eligibilityCriteria": [
+        "Applies to all public and residential sectors of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-health-checkup",
+      "title": "Basic Health Checkups",
+      "category": "Health and Medical Services",
+      "tagline": "Routine blood pressure monitoring, random blood sugar screening, and vital signs assessment.",
+      "description": "Preventive cardiovascular and metabolic health screenings conducted by barangay health workers (BHWs). Early detection for hypertension, diabetes, and lifestyle illnesses.",
+      "imageUrl": "/assets/services/brgy_medical_clinic_1794197711940.jpg",
+      "status": "Active",
+      "badgeText": "Daily Walk-in",
+      "deadline": "Daily Health Desk",
+      "targetAudience": "Adults, Seniors, and High-Risk Patients",
+      "processingTime": "15 - 30 Minutes",
+      "maxBenefitAmount": "Free Screening",
+      "requirements": [
+        "Valid Resident ID or Senior Citizen ID",
+        "Personal Health Monitoring Logbook (optional)"
+      ],
+      "eligibilityCriteria": [
+        "Open to all residents of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-health-circumcision",
+      "title": "Circumcision Services",
+      "category": "Health and Medical Services",
+      "tagline": "Annual free minor surgical circumcision (Operation Tuli) with sterile equipment and antibiotic kit.",
+      "description": "Safe clinical circumcision performed by registered medical doctors and nurses during summer breaks. Includes free local anesthesia, sterile surgical sets, post-op antibiotics, and dressing kits.",
+      "imageUrl": "/assets/services/brgy_dental_clinic_1794197757496.jpg",
+      "status": "Active",
+      "badgeText": "Annual Operation Tuli",
+      "deadline": "Summer Season Outreach & Scheduled Slots",
+      "targetAudience": "Young Boys & Adolescents (Ages 9-15)",
+      "processingTime": "Scheduled Batch Outreaches",
+      "maxBenefitAmount": "Free Minor Surgery & Med Kit",
+      "requirements": [
+        "Signed Parental Consent and Waiver Form",
+        "Child Birth Certificate or Student ID",
+        "Parent / Guardian Valid Resident ID"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo aged 9 years old and above",
+        "No bleeding disorders or contraindicating medical conditions"
+      ]
+    },
+    {
+      "id": "prog-health-consultation",
+      "title": "Free Medical Consultations",
+      "category": "Health and Medical Services",
+      "tagline": "Walk-in and scheduled medical consultations with Bugo Health Center physicians and nurses.",
+      "description": "Comprehensive general outpatient clinical consultations, physical examinations, vital checks, prescription generation, and diagnostic referrals provided at zero cost to residents.",
+      "imageUrl": "/assets/services/brgy_medical_clinic_1794197711940.jpg",
+      "status": "Active",
+      "badgeText": "Free Clinical Care",
+      "deadline": "Mon-Fri 8:00 AM - 5:00 PM",
+      "targetAudience": "All Bugo Residents & Dependents",
+      "processingTime": "Same Day Consultation",
+      "maxBenefitAmount": "Free Consultation",
+      "requirements": [
+        "Barangay Resident ID or Family Health Card",
+        "Previous Medical Records / Prescriptions (if any)"
+      ],
+      "eligibilityCriteria": [
+        "Registered resident of Barangay Bugo",
+        "Non-emergency outpatient medical needs"
+      ]
+    },
+    {
+      "id": "prog-health-dental",
+      "title": "Dental Services and Tooth Extraction",
+      "category": "Health and Medical Services",
+      "tagline": "Free tooth extraction, oral health consultation, fluoride treatment, and emergency relief.",
+      "description": "Visiting City Health Dentist clinics providing dental checkups, tooth extractions for decayed teeth, pain relief medication, and pediatric fluoride varnishing for Bugo youth.",
+      "imageUrl": "/assets/services/brgy_dental_clinic_1794197757496.jpg",
+      "status": "Active",
+      "badgeText": "Free Dental Clinic",
+      "deadline": "Weekly Scheduled Dental Missions",
+      "targetAudience": "Children, Adults, and Senior Citizens",
+      "processingTime": "Appointment / Queue on Dental Day",
+      "maxBenefitAmount": "Free Oral Health Care",
+      "requirements": [
+        "Valid Barangay Resident ID or School ID",
+        "Blood pressure screening prior to extraction",
+        "Signed Medical History / Consent Form"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Clinically cleared for dental extraction"
+      ]
+    },
+    {
+      "id": "prog-health-family-planning",
+      "title": "Family Planning Services",
+      "category": "Health and Medical Services",
+      "tagline": "Responsible parenthood counseling, oral contraceptives, DMPA injectables, and IUD insertion referrals.",
+      "description": "Free reproductive health education, supply of oral contraceptive pills, condoms, quarterly injectable DMPA, and referrals for bilateral tubal ligation and vasectomy.",
+      "imageUrl": "/assets/services/brgy_medical_clinic_1794197711940.jpg",
+      "status": "Active",
+      "badgeText": "Reproductive Health",
+      "deadline": "Year-Round Service",
+      "targetAudience": "Couples and Individuals of Reproductive Age",
+      "processingTime": "Immediate Consultation",
+      "maxBenefitAmount": "Free Contraceptives & Counseling",
+      "requirements": [
+        "Family Planning Client Card / Resident ID",
+        "Brief health assessment with midwife"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Voluntary enrollment in family planning methods"
+      ]
+    },
+    {
+      "id": "prog-health-free-medicines",
+      "title": "Free Medicines (Subject to Availability)",
+      "category": "Health and Medical Services",
+      "tagline": "Free pharmacy dispensing of maintenance medicines, antibiotics, and vitamins.",
+      "description": "Barangay Bugo health dispensary stocks vital medications for hypertension (Losartan, Amlodipine), diabetes (Metformin), pediatric antibiotics, paracetamol, and vitamins sourced from City Health Department.",
+      "imageUrl": "/assets/services/brgy_medical_clinic_1794197711940.jpg",
+      "status": "Active",
+      "badgeText": "City Health Stock",
+      "deadline": "Continuous While Stocks Last",
+      "targetAudience": "Seniors, Indigents, and Pediatric Patients",
+      "processingTime": "Immediate Dispensing",
+      "maxBenefitAmount": "Free Essential Medication",
+      "requirements": [
+        "Valid Doctor’s Prescription (issued within the last 60 days)",
+        "Barangay Resident ID or Indigency Slip",
+        "Senior Citizen OSCA ID or PWD ID (for maintenance)"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Valid doctor prescription matching pharmacy inventory"
+      ]
+    },
+    {
+      "id": "prog-health-immunization",
+      "title": "Immunization and Vaccination",
+      "category": "Health and Medical Services",
+      "tagline": "National Expanded Program on Immunization (EPI) vaccines for infants, toddlers, and seniors.",
+      "description": "Complete childhood vaccine protection including BCG, Hepatitis B, Pentavalent, Oral Polio, Measles-Rubella, as well as annual seasonal Flu and Pneumococcal vaccines for senior citizens.",
+      "imageUrl": "/assets/services/brgy_vaccine_child_1794197736182.jpg",
+      "status": "Active",
+      "badgeText": "DOH Certified Vaccines",
+      "deadline": "Wednesdays: Infant EPI | Seasonal: Senior Flu",
+      "targetAudience": "Infants (0-12 mos), Children, and Seniors",
+      "processingTime": "Scheduled Clinic Sessions",
+      "maxBenefitAmount": "100% Free DOH Vaccines",
+      "requirements": [
+        "Child Baby Health Book / Immunization Card",
+        "Parent or Guardian Valid Resident ID",
+        "Senior Citizen ID (for Senior Flu shots)"
+      ],
+      "eligibilityCriteria": [
+        "Age-appropriate vaccine schedule under DOH guidelines",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-health-maternal",
+      "title": "Maternal and Prenatal Care",
+      "category": "Health and Medical Services",
+      "tagline": "Safe motherhood prenatal checkups, tetanus toxoid, iron supplements, and birth planning.",
+      "description": "Comprehensive maternal health services supporting expectant mothers through every trimester. Includes fetal heartbeat monitoring, prenatal vitamins, laboratory referrals, and delivery facility coordination.",
+      "imageUrl": "/assets/services/brgy_vaccine_child_1794197736182.jpg",
+      "status": "Active",
+      "badgeText": "Maternal Wellness",
+      "deadline": "Weekly Prenatal Clinic",
+      "targetAudience": "Expectant Mothers in Barangay Bugo",
+      "processingTime": "Continuous Care Management",
+      "maxBenefitAmount": "Free Prenatal Package",
+      "requirements": [
+        "Mother & Child Health Book (Pink Card)",
+        "Valid ID of Expectant Mother",
+        "Previous ultrasound or laboratory findings (if available)"
+      ],
+      "eligibilityCriteria": [
+        "Pregnant resident residing in Bugo Zones 1-10",
+        "Commitment to regular prenatal follow-ups"
+      ]
+    },
+    {
+      "id": "prog-health-nutrition",
+      "title": "Nutrition Programs",
+      "category": "Health and Medical Services",
+      "tagline": "Supplementary feeding for malnourished children, micronutrient powders, and growth monitoring.",
+      "description": "Barangay Nutrition Scholar (BNS) program conducting Operation Timbang Plus, hot nutritious daily meal feeding for wasted/stunted toddlers, and vitamin A supplementation.",
+      "imageUrl": "/assets/services/brgy_daycare_learning_1794197756426.jpg",
+      "status": "Active",
+      "badgeText": "Child Nutrition Grant",
+      "deadline": "Ongoing 120-Day Feeding Cycles",
+      "targetAudience": "Underweight Toddlers & Malnourished Children",
+      "processingTime": "Intake Assessment",
+      "maxBenefitAmount": "Free Supplementary Feeding",
+      "requirements": [
+        "Child Growth Monitoring Record",
+        "Parent Resident ID",
+        "Barangay Health Center Indigency slip"
+      ],
+      "eligibilityCriteria": [
+        "Children aged 6 to 59 months identified as underweight or stunted",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-health-tb-dots",
+      "title": "Tuberculosis (TB-DOTS) Services",
+      "category": "Health and Medical Services",
+      "tagline": "Free sputum microscopy, GeneXpert testing, chest X-ray vouchers, and full 6-month anti-TB treatment.",
+      "description": "Directly Observed Treatment Short-Course (TB-DOTS) clinic providing confidential diagnosis, daily medication management, and contact tracing to eradicate tuberculosis in the community.",
+      "imageUrl": "/assets/services/brgy_medical_clinic_1794197711940.jpg",
+      "status": "Active",
+      "badgeText": "DOH DOTS Accredited",
+      "deadline": "Daily Treatment Monitoring",
+      "targetAudience": "Presumptive & Diagnosed TB Patients",
+      "processingTime": "Same Day Treatment Initiation",
+      "maxBenefitAmount": "100% Free Complete TB Regimen",
+      "requirements": [
+        "Sputum specimen for laboratory examination",
+        "Valid Resident ID",
+        "Chest X-Ray referral film (if existing)"
+      ],
+      "eligibilityCriteria": [
+        "Presumptive TB cases or confirmed positive TB patients",
+        "Commitment to complete 6-month regimen"
+      ]
+    },
+    {
+      "id": "prog-legal-consultation",
+      "title": "Legal Consultation",
+      "category": "Legal Services",
+      "tagline": "Confidential legal advice on civil disputes, family relations, property rights, and labor rights.",
+      "description": "Free initial legal consultations with visiting volunteer attorneys and paralegals. Get expert counsel on land tenure issues, child custody, domestic violence, debt settlement, and labor exploitation.",
+      "imageUrl": "/assets/services/real_barangay_hall_1788172230992.jpg",
+      "status": "Active",
+      "badgeText": "Free Legal Advice",
+      "deadline": "Every Thursday Legal Clinic",
+      "targetAudience": "Residents with Unresolved Legal Questions",
+      "processingTime": "Consultation by Appointment",
+      "maxBenefitAmount": "Free 30-Minute Attorney Counseling",
+      "requirements": [
+        "Barangay Resident ID",
+        "Summary narrative of legal issue",
+        "Copies of relevant contracts, affidavits, or legal documents"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Unable to afford private legal representation"
+      ]
+    },
+    {
+      "id": "prog-legal-doc-assistance",
+      "title": "Assistance with Legal Documents",
+      "category": "Legal Services",
+      "tagline": "Drafting assistance for Affidavits of Loss, Undertakings, Special Power of Attorney, and Certifications.",
+      "description": "Barangay paralegal desk assists residents in properly formatting and drafting standard legal affidavits required for lost IDs, SIM registration, school undertakings, and senior pension claims.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Paralegal Drafting",
+      "deadline": "Year-Round Service",
+      "targetAudience": "All Residents in Need of Legal Templates",
+      "processingTime": "1 - 2 Business Hours",
+      "maxBenefitAmount": "Free Legal Document Drafting",
+      "requirements": [
+        "Valid Resident ID",
+        "Details of lost item (ID number, date lost, circumstance) or transaction"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Affidavit must be truthful and compliant with Philippine law"
+      ]
+    },
+    {
+      "id": "prog-legal-notarization",
+      "title": "Free Notarization During Government Outreach",
+      "category": "Legal Services",
+      "tagline": "Pro-bono notarization of affidavits of loss, indigency, parental consent, and undertakings.",
+      "description": "Regular legal outreach clinics conducted in partnership with the Public Attorney’s Office (PAO) and the Integrated Bar of the Philippines (IBP) offering free notarial seals for low-income constituents.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Pro-Bono Notarization",
+      "deadline": "Scheduled Outreach Days",
+      "targetAudience": "Indigent Residents & Public Scholars",
+      "processingTime": "Same Day on Outreach Date",
+      "maxBenefitAmount": "Free Notarial Seal & Signature",
+      "requirements": [
+        "Unsigned Document / Affidavit in 2 duplicate copies",
+        "Two (2) Valid Government IDs with photo and signature",
+        "Barangay Certificate of Indigency"
+      ],
+      "eligibilityCriteria": [
+        "Document strictly for personal or indigent assistance use",
+        "Bona fide resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-live-agricultural-assistance",
+      "title": "Agricultural Assistance",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Technical farming extension, organic fertilizer access, and soil fertility advisory.",
+      "description": "Programs supporting hillside and lowland farmers in Bugo Zones 3, 6, and 7 with sustainable farming techniques, pest management consultations, and organic compost distribution.",
+      "imageUrl": "/assets/services/brgy_agriculture_seeds_1794197712913.jpg",
+      "status": "Active",
+      "badgeText": "Agri-Extension",
+      "deadline": "Planting Season Cycles",
+      "targetAudience": "Smallholder Farmers & Urban Gardeners",
+      "processingTime": "Scheduled Field Visits",
+      "maxBenefitAmount": "Free Technical Agricultural Advisory",
+      "requirements": [
+        "RSBSA (Registry System for Basic Sectors in Agriculture) ID or Registration",
+        "Barangay Certificate of Residency",
+        "Proof of Farm Land Stewardship or Tillage"
+      ],
+      "eligibilityCriteria": [
+        "Active farmer or agrarian beneficiary in Bugo",
+        "Practicing crop cultivation or livestock raising"
+      ]
+    },
+    {
+      "id": "prog-live-business-processing",
+      "title": "Business Permit Processing Assistance",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Technical guidance for micro-enterprises on DTI registration, BIR TIN, and business compliance.",
+      "description": "Consultation desk helping local entrepreneurs, market vendors, and sari-sari store owners navigate regulatory permits, BMBE (Barangay Micro Business Enterprise) tax exemptions, and food handling certificates.",
+      "imageUrl": "/assets/services/real_barangay_hall_1788172230992.jpg",
+      "status": "Active",
+      "badgeText": "MSME Business Desk",
+      "deadline": "Continuous Business Support",
+      "targetAudience": "Sari-Sari Store Owners, Vendors, & Startups",
+      "processingTime": "1 - 2 Business Days",
+      "maxBenefitAmount": "Free Technical Guidance & Forms",
+      "requirements": [
+        "Proposed Business Name and Location",
+        "Valid Resident ID of Business Owner",
+        "Sketch of Business Location within Bugo"
+      ],
+      "eligibilityCriteria": [
+        "Business located within Barangay Bugo",
+        "Filipino citizen enterprise owner"
+      ]
+    },
+    {
+      "id": "prog-live-employment-referral",
+      "title": "Employment Referrals",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Direct endorsement to Cagayan de Oro industrial locators, Del Monte cannery, and local businesses.",
+      "description": "Barangay PESO coordinator endorsements connecting verified local residents directly with hiring managers at food processing plants, logistics centers, supermarkets, and industrial zones in Bugo.",
+      "imageUrl": "/assets/services/real_barangay_hall_1788172230992.jpg",
+      "status": "Active",
+      "badgeText": "Direct Industry Link",
+      "deadline": "Ongoing Open Job Vacancies",
+      "targetAudience": "Skilled, Semi-Skilled, & High School/College Grads",
+      "processingTime": "2 - 3 Business Days",
+      "maxBenefitAmount": "Official Barangay Employment Endorsement",
+      "requirements": [
+        "Updated Resume / Curriculum Vitae",
+        "Barangay Clearance for Employment",
+        "Police or NBI Clearance",
+        "TESDA NC II Certificate (for technical roles)"
+      ],
+      "eligibilityCriteria": [
+        "Bona fide resident of Barangay Bugo",
+        "Meets educational and physical criteria of hiring partner"
+      ]
+    },
+    {
+      "id": "prog-live-farming-support",
+      "title": "Livelihood and Farming Support",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Livelihood starter kits, food processing training, and cooperative financing linkups.",
+      "description": "Empowers low-income families and women cooperatives with vocational livelihood skills (meat processing, pastry baking, soap making, swine raising) and small starter grants to achieve sustainable household incomes.",
+      "imageUrl": "/assets/services/brgy_agriculture_seeds_1794197712913.jpg",
+      "status": "Active",
+      "badgeText": "Cooperative Grants",
+      "deadline": "Quarterly Cohort Enrollments",
+      "targetAudience": "Women Associations, Fisherfolk, & Farmers",
+      "processingTime": "5 - 10 Business Days",
+      "maxBenefitAmount": "Livelihood Starter Kit & Micro-Grant",
+      "requirements": [
+        "Certificate of Indigency or Low Income",
+        "Barangay Resident ID",
+        "Livelihood Group or Cooperative Membership Form"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo",
+        "Demonstrated willingness to maintain livelihood enterprise"
+      ]
+    },
+    {
+      "id": "prog-live-job-assistance",
+      "title": "Job Application Assistance",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Free resume encoding and printing, PESO registration, and government clearance preparation.",
+      "description": "Empower job hunters with professional CV formatting, digital portal applications, PhilJobNet profile registration, and document compilation to fast-track employment.",
+      "imageUrl": "/assets/services/brgy_clearance_cert_1794197711166.jpg",
+      "status": "Active",
+      "badgeText": "Free Career Help",
+      "deadline": "Year-Round Service",
+      "targetAudience": "Unemployed Youth & Job Seekers",
+      "processingTime": "Same Day Desk Assistance",
+      "maxBenefitAmount": "Free Printing & Portal Registration",
+      "requirements": [
+        "Draft biodata or educational records",
+        "Barangay Resident ID",
+        "2x2 Formal ID Picture"
+      ],
+      "eligibilityCriteria": [
+        "Resident of Barangay Bugo seeking active employment",
+        "At least 18 years of age (or 15-17 with special permit)"
+      ]
+    },
+    {
+      "id": "prog-live-seed-distribution",
+      "title": "Distribution of Agricultural Seeds",
+      "category": "Livelihood and Employment Services",
+      "tagline": "Free high-yield certified vegetable seed packets for backyard gardening and food security.",
+      "description": "Barangay and Department of Agriculture partnership providing seed packs of eggplant (talong), tomato (kamatis), bitter gourd (ampalaya), string beans (sitaw), and okra to promote household food self-sufficiency.",
+      "imageUrl": "/assets/services/brgy_agriculture_seeds_1794197712913.jpg",
+      "status": "Active",
+      "badgeText": "Free Seed Packets",
+      "deadline": "Ongoing While Seed Stocks Last",
+      "targetAudience": "Households, Schools, & Urban Gardeners",
+      "processingTime": "Immediate Release at Agri Desk",
+      "maxBenefitAmount": "Free Certified Seed Kits",
+      "requirements": [
+        "Barangay Resident ID",
+        "Backyard Food Security Pledge Commitment"
+      ],
+      "eligibilityCriteria": [
+        "Open to all Bugo households with space for gardening or container farming"
+      ]
+    },
+    {
+      "id": "prog-medical-aid",
+      "title": "Financial and Medical Assistance Referrals",
+      "category": "Social Welfare Services",
+      "tagline": "Official social case study and endorsement for DSWD AICS, City Mayor’s Office, and PCSO funds.",
+      "description": "Fast-track endorsement for emergency cash assistance to cover hospitalization bills, dialysis sessions, chemotherapy, specialized laboratory scans, and funeral expenses through government safety nets.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "DSWD AICS Referral",
+      "deadline": "Immediate Emergency Processing",
+      "targetAudience": "Families Facing Medical Emergencies",
+      "processingTime": "24 - 48 Hours",
+      "maxBenefitAmount": "Referral for up to ₱50,000.00 Grant",
+      "requirements": [
+        "Original Clinical Abstract or Doctor’s Prescription",
+        "Hospital Billing Statement or Funeral Contract",
+        "Barangay Certificate of Indigency",
+        "Valid Government ID of Applicant & Patient"
+      ],
+      "eligibilityCriteria": [
+        "Indigent patient or dependent residing in Barangay Bugo",
+        "Active medical treatment or recent bereavement"
+      ]
+    },
+    {
+      "id": "prog-social-low-income",
+      "title": "Assistance for Low-Income Families",
+      "category": "Social Welfare Services",
+      "tagline": "Emergency grocery subsidies, calamity relief packs, and social protection safety nets.",
+      "description": "Direct distribution of staple foods (rice, canned goods, milk), seasonal assistance, and targeted interventions for ultra-poor families residing in informal settlements across Bugo.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "Relief & Subsidy",
+      "deadline": "Continuous Monitoring & Distribution",
+      "targetAudience": "Indigent Families & Informal Settlers",
+      "processingTime": "Immediate Dispatch upon Verification",
+      "maxBenefitAmount": "Food Packs & Emergency Relief",
+      "requirements": [
+        "Barangay Indigency Certification",
+        "Family Composition & Purok Registration",
+        "Valid Resident ID"
+      ],
+      "eligibilityCriteria": [
+        "Household monthly income below ₱8,500.00",
+        "Bona fide family resident of Bugo"
+      ]
+    },
+    {
+      "id": "prog-social-pwd",
+      "title": "Assistance for Persons with Disabilities (PWD)",
+      "category": "Social Welfare Services",
+      "tagline": "PWD ID issuance, 20% discount booklets, assistive mobility devices, and quarterly welfare aid.",
+      "description": "Advocacy and benefits program protecting Bugo residents with long-term physical, mental, intellectual, or sensory impairments under Republic Act 10754.",
+      "imageUrl": "/assets/services/brgy_pwd_wheelchair_1794197737143.jpg",
+      "status": "Active",
+      "badgeText": "RA 10754 Mandated",
+      "deadline": "Continuous Enrollment",
+      "targetAudience": "Children and Adults with Disabilities",
+      "processingTime": "3 - 5 Business Days",
+      "maxBenefitAmount": "Disability ID & Welfare Subsidies",
+      "requirements": [
+        "Medical Certificate with Disability Assessment from licensed physician",
+        "Barangay Certificate of Residency in Bugo",
+        "2 copies of 2x2 ID photos with white background"
+      ],
+      "eligibilityCriteria": [
+        "Diagnosed with permanent physical, cognitive, visual, hearing, or psychological disability",
+        "Resident of Barangay Bugo"
+      ]
+    },
+    {
+      "id": "prog-social-seniors",
+      "title": "Assistance for Senior Citizens",
+      "category": "Social Welfare Services",
+      "tagline": "Office of Senior Citizens Affairs (OSCA) booklet, social pensions, and centenarian benefits.",
+      "description": "Comprehensive welfare facilitation for elderly residents aged 60 and above. Includes OSCA identification cards, 20% discount booklets, facilitation of DSWD Social Pension for indigent seniors, and annual local cash gifts.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "Senior Citizen OSCA",
+      "deadline": "Continuous Registration",
+      "targetAudience": "Senior Citizens (Aged 60+)",
+      "processingTime": "3 - 5 Business Days",
+      "maxBenefitAmount": "Monthly Pension & Discount Privileges",
+      "requirements": [
+        "PSA Birth Certificate or Valid ID showing Birthdate (Age 60+)",
+        "Barangay Certificate of Residency in Bugo",
+        "2 copies of 2x2 recent ID photos"
+      ],
+      "eligibilityCriteria": [
+        "Filipino citizen residing in Barangay Bugo",
+        "Must be 60 years of age or older"
+      ]
+    },
+    {
+      "id": "prog-social-solo-parent",
+      "title": "Solo Parent Assistance",
+      "category": "Social Welfare Services",
+      "tagline": "Expanded Solo Parents Welfare Act (RA 11861) ID processing, ₱1,000 monthly cash subsidy, and leave benefits.",
+      "description": "Registration and support for single mothers and fathers parenting dependents alone. Grants access to 7-day parental leave, education scholarships, and priority in government housing and livelihood assistance.",
+      "imageUrl": "/assets/services/brgy_senior_pension_1794197712463.jpg",
+      "status": "Active",
+      "badgeText": "RA 11861 Welfare",
+      "deadline": "Year-Round Intake",
+      "targetAudience": "Single Parents & Legal Guardians in Bugo",
+      "processingTime": "5 - 7 Business Days",
+      "maxBenefitAmount": "Solo Parent ID & Monthly Grant",
+      "requirements": [
+        "Affidavit of Solo Parenting detailing circumstance (abandonment, separation, death)",
+        "Birth Certificate of dependent child/children (below 22 years old if unmarried/unemployed)",
+        "Death Certificate of spouse (if applicable)",
+        "Barangay Indigency or Income Tax Return"
+      ],
+      "eligibilityCriteria": [
+        "Sole custody and financial provider for minor or dependent children",
+        "Resident of Barangay Bugo for at least 6 months"
+      ]
+    },
+    {
+      "id": "prog-social-wheelchair",
+      "title": "Wheelchair Assistance",
+      "category": "Social Welfare Services",
+      "tagline": "Free donation of orthopedic wheelchairs, walkers, and crutches for mobility-impaired residents.",
+      "description": "Direct provision of mobility aids procured through barangay health development funds and civic organization donations to restore independence to bedridden, senior, and injured Bugo constituents.",
+      "imageUrl": "/assets/services/brgy_pwd_wheelchair_1794197737143.jpg",
+      "status": "Active",
+      "badgeText": "Mobility Equipment",
+      "deadline": "Subject to Inventory Allocation",
+      "targetAudience": "Paraplegic, Amputee, and Frail Elderly Residents",
+      "processingTime": "2 - 3 Business Days",
+      "maxBenefitAmount": "Free Wheelchair Unit",
+      "requirements": [
+        "Physician recommendation for mobility aid",
+        "Barangay Indigency Certification",
+        "PWD ID or Senior ID of recipient"
+      ],
+      "eligibilityCriteria": [
+        "Documented medical requirement for wheelchair or walking aid",
+        "Low-income resident of Barangay Bugo unable to purchase privately"
+      ]
+    }
+  ],
+  "applications": [],
+  "announcements": [
+    {
+      "id": "ann-01",
+      "title": "Scheduled Water Interruption Notice",
+      "category": "Water",
+      "description": "COWD maintenance works on October 28 from 8:00 AM to 5:00 PM affecting Zones 1 to 5.",
+      "date": "Today",
+      "viewsCount": 142,
+      "iconType": "water",
+      "isPinned": true,
+      "status": "Published"
+    }
+  ],
+  "activityLogs": [],
+  "archivedItems": [],
+  "notifications": [],
+  "census": {
+    "totalPopulation": 36840,
+    "totalHouseholds": 9210,
+    "registeredVoters": 22473,
+    "seniorCitizens": 3130,
+    "workingAge": 22104,
+    "minors": 11606,
+    "purokBreakdown": [
+      {
+        "purok": "Zone 1 - Centro Riverside",
+        "population": 4820,
+        "households": 1205
+      },
+      {
+        "purok": "Zone 2 - Chapel Area",
+        "population": 4150,
+        "households": 1038
+      },
+      {
+        "purok": "Zone 3 - Suntingcahon Valley",
+        "population": 3920,
+        "households": 980
+      },
+      {
+        "purok": "Zone 4 - Highway View",
+        "population": 3450,
+        "households": 863
+      },
+      {
+        "purok": "Zone 5 - Lower Bugo Market",
+        "population": 3810,
+        "households": 953
+      },
+      {
+        "purok": "Zone 6 - Upper Bugo Hills",
+        "population": 3650,
+        "households": 912
+      },
+      {
+        "purok": "Zone 7 - Mangga Heights",
+        "population": 2980,
+        "households": 745
+      },
+      {
+        "purok": "Zone 8 - Cogonan Plains",
+        "population": 3240,
+        "households": 810
+      },
+      {
+        "purok": "Zone 9 - Bayside Coastal",
+        "population": 3110,
+        "households": 778
+      },
+      {
+        "purok": "Zone 10 - San Miguel Industrial",
+        "population": 3710,
+        "households": 926
+      }
+    ],
+    "lastUpdated": "2026-11-17"
+  },
+  "disasterVictims": [
+    {
+      "id": "dv-imp-1794904550800-0",
+      "residentId": "user-maria-santos",
+      "victimCode": "DV-2026-4564",
+      "fullName": "Joshua Abella Laurio",
+      "contactNumber": "09175554321",
+      "purok": "Zone 3 - Suntingcahon Valley",
+      "address": "Block 4 Lot 12, Suntingcahon Valley, Barangay Bugo, Cagayan de Oro City",
+      "disasterType": "Fire",
+      "incidentDate": "2026-11-17",
+      "damageLevel": "Severe",
+      "householdSize": 4,
+      "householdIncome": "₱8,500.00 (Informal / Low Income)",
+      "vulnerabilityTags": [],
+      "enrolledProgramIds": [],
+      "enrolledProgramTitles": [],
+      "selectionStatus": "Waitlisted",
+      "recordedAt": "2026-11-17T08:35:50.800Z",
+      "notes": ""
+    },
+    {
+      "id": "dv-1794904550748-tr0h",
+      "residentId": "user-maria-santos",
+      "victimCode": "DV-2026-5437",
+      "fullName": "Joshua Abella Laurio",
+      "contactNumber": "09175554321",
+      "purok": "Zone 3 - Suntingcahon Valley",
+      "address": "Block 4 Lot 12, Suntingcahon Valley, Barangay Bugo, Cagayan de Oro City",
+      "disasterType": "Flood",
+      "incidentDate": "2026-11-17",
+      "damageLevel": "Moderate",
+      "householdSize": 4,
+      "householdIncome": "₱8,500.00 (Informal / Low Income)",
+      "vulnerabilityTags": [],
+      "enrolledProgramIds": [],
+      "enrolledProgramTitles": [],
+      "selectionStatus": "Waitlisted",
+      "recordedAt": "2026-11-17T08:35:50.748Z",
+      "notes": ""
+    }
+  ],
+  "hazardZones": [
+    {
+      "id": "hz-bugo-flood-1",
+      "name": "Zone 1 Riverside Flood Basin",
+      "disasterType": "Flood",
+      "riskLevel": "High",
+      "purok": "Zone 1 - Centro Riverside",
+      "lat": 8.5112,
+      "lng": 124.7535,
+      "radiusMeters": 220,
+      "description": "Riverbank overflow area during heavy monsoon rain.",
+      "affectedHouseholdsEst": 140,
+      "updatedAt": "2026-11-01"
+    },
+    {
+      "id": "hz-bugo-coastal-2",
+      "name": "Zone 9 Bayside Coastal Surge Belt",
+      "disasterType": "Flood",
+      "riskLevel": "Moderate",
+      "purok": "Zone 9 - Bayside Coastal",
+      "lat": 8.5162,
+      "lng": 124.7524,
+      "radiusMeters": 200,
+      "description": "High-tide and storm-drainage backflow area near Macajalar Bay.",
+      "affectedHouseholdsEst": 95,
+      "updatedAt": "2026-11-01"
+    },
+    {
+      "id": "hz-bugo-landslide-3",
+      "name": "Upper Bugo Hills Slope Zone",
+      "disasterType": "Landslide",
+      "riskLevel": "High",
+      "purok": "Zone 6 - Upper Bugo Hills",
+      "lat": 8.4978,
+      "lng": 124.7642,
+      "radiusMeters": 260,
+      "description": "Steep hillside terrain prone to soil saturation and mudslides.",
+      "affectedHouseholdsEst": 80,
+      "updatedAt": "2026-11-01"
+    },
+    {
+      "id": "hz-bugo-quake-4",
+      "name": "Suntingcahon Valley Seismic Fault Sector",
+      "disasterType": "Earthquake",
+      "riskLevel": "Moderate",
+      "purok": "Zone 3 - Suntingcahon Valley",
+      "lat": 8.5045,
+      "lng": 124.7601,
+      "radiusMeters": 240,
+      "description": "Soft alluvial ground with heightened shaking sensitivity.",
+      "affectedHouseholdsEst": 110,
+      "updatedAt": "2026-11-01"
+    }
+  ]
+}

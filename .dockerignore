@@ -1,0 +1,50 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Build artifacts
+dist
+
+# Development files
+.env
+.env.local
+.env.development
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Test files
+coverage
+.nyc_output
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Backups
+backups
+
+# Data files (use mounted volumes or external DB)
+data/db.json
+
+# Build cache
+.cache
+.parcel-cache
+.next

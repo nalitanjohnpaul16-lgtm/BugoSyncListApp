@@ -1,0 +1,64 @@
+# Google Cloud Build configuration for automated deployment
+# This builds the Docker image and deploys to Cloud Run
+
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/bugo-sync-list:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/bugo-sync-list:latest'
+      - '.'
+    timeout: 600s
+
+  # Step 2: Push the image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/bugo-sync-list:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/bugo-sync-list:latest'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'bugo-sync-list'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/bugo-sync-list:$COMMIT_SHA'
+      - '--region'
+      - 'asia-southeast1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '10'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'NODE_ENV=production'
+
+# Specify timeout for entire build
+timeout: 1200s
+
+# Images to store in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/bugo-sync-list:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/bugo-sync-list:latest'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY

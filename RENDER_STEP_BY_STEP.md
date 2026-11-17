@@ -86,7 +86,9 @@
 
 **IMPORTANT:** Open the file `RENDER_ENV_VARIABLES.txt` and copy values from there!
 
-In the **Environment Variables** section, add these:
+In the **Environment Variables** section, click **"Add Environment Variable"** for each one:
+
+#### Required Variables (Must Have):
 
 ```
 NODE_ENV=production
@@ -101,9 +103,9 @@ CORS_ORIGIN=https://bugo-sync-list.onrender.com
 
 FORCE_HTTPS=true
 
-JWT_SECRET=[COPY from RENDER_ENV_VARIABLES.txt]
+JWT_SECRET=1252d17d1e9f5846e2d3f4dfe0eda637bd19309be0808c4a6c1b56f6f2fc524da9ff980f87c57b370ad3c12b3c5d6f1f
 
-HMAC_SECRET=[COPY from RENDER_ENV_VARIABLES.txt]
+HMAC_SECRET=1eec9b76f7c92aeebd55e89831b5bed9e6fd309ac982c45af87a5c8341f36b0c42d581f482f34502641202cba38e566d
 
 JWT_EXPIRES_IN=2h
 
@@ -114,7 +116,16 @@ SEED_ADMIN_PASSWORD=BugoAdmin@Secure2026!#
 SEED_RESIDENT_PASSWORD=BugoResident@Secure2026!#
 ```
 
-**Note:** If you named your service differently than "bugo-sync-list", update APP_URL and CORS_ORIGIN accordingly!
+#### Optional Variables (For Enhanced Features):
+
+```
+GEMINI_API_KEY=AIzaSyAQDQ.Ab8RN6IhQ8D0-4shJLfyCvYr4pIbEFpNxwz7o5ZYCUWQMNlMEQ
+```
+*(Only needed for AI-powered ID verification. App works without it.)*
+
+**Note:** 
+- If you named your service differently than "bugo-sync-list", update APP_URL and CORS_ORIGIN accordingly!
+- The hazard map now uses **OpenStreetMap** (free, no API key needed) 🗺️
 
 ---
 

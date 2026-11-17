@@ -87,6 +87,25 @@ npm start
 ## 🛠️ Technology Stack
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, Canvas Confetti, QR Code
 - **Backend**: Node.js, Express, tsx
+- **Database**: PostgreSQL with Prisma ORM
+- **Maps**: OpenStreetMap + Leaflet.js (free, no API key required)
 - **Cryptographic Security**: PBKDF2-SHA512 Password Hashing, HMAC-SHA256 Voucher Tokens
 - **AI Integration**: `@google/genai` (Gemini 3.8 Flash Vision for ID card scrutiny)
-- **Database**: Local JSON persistence + Complete MySQL 5.7/8.0 Relational DDL Script
+
+---
+
+## 🗺️ Disaster Hazard Map
+- Interactive hazard zone mapping using **OpenStreetMap + Leaflet.js**
+- Real-time flood, landslide, earthquake, and fire-prone area visualization
+- Admin drag-and-drop zone management
+- Completely free with no API key requirements
+- Works on all free hosting platforms
+
+---
+
+## 🌐 Deployment
+This application is configured for **Render.com** free tier deployment:
+- PostgreSQL database (500MB free)
+- Web service hosting
+- Automatic deploys from GitHub
+- See `RENDER_STEP_BY_STEP.md` for complete deployment guide

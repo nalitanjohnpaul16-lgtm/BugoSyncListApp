@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { 
-  UserRole, 
-  ResidentUser, 
-  AssistanceProgram, 
-  AssistanceApplication, 
+import {
+  UserRole,
+  ResidentUser,
+  AssistanceProgram,
+  AssistanceApplication,
   ApplicationStatus,
   AnnouncementItem,
   NotificationItem,
@@ -17,13 +17,13 @@ import {
   DisasterVictimRecord,
   BugoHazardZone
 } from '../types';
-import { 
-  DEMO_ADMIN_USER, 
-  DEMO_RESIDENT_USER, 
-  INITIAL_PROGRAMS, 
-  INITIAL_APPLICATIONS, 
-  INITIAL_RESIDENT_RECORDS, 
-  INITIAL_ANNOUNCEMENTS, 
+import {
+  DEMO_ADMIN_USER,
+  DEMO_RESIDENT_USER,
+  INITIAL_PROGRAMS,
+  INITIAL_APPLICATIONS,
+  INITIAL_RESIDENT_RECORDS,
+  INITIAL_ANNOUNCEMENTS,
   INITIAL_NOTIFICATIONS,
   INITIAL_ACTIVITY_LOGS,
   INITIAL_ARCHIVED_ITEMS,
@@ -43,7 +43,7 @@ interface AppContextType {
   setAuthView: (view: AuthViewType) => void;
   currentUser: ResidentUser | null;
   setCurrentUser: (user: ResidentUser | null) => void;
-  
+
   // Navigation Tabs
   adminTab: AdminTabType;
   setAdminTab: (tab: AdminTabType) => void;
@@ -74,7 +74,6 @@ interface AppContextType {
   archivedItems: ArchiveItem[];
   disasterVictims: DisasterVictimRecord[];
   hazardZones: BugoHazardZone[];
-  mapsApiKey: string;
 
   // Auth Operations
   loginWithCredentials: (email: string, pass: string) => Promise<{ success: boolean; message?: string }>;
@@ -114,15 +113,15 @@ interface AppContextType {
   submitAssistanceApplication: (data: any) => Promise<string>;
   verifyApplicationDocument: (appId: string, docId: string, isVerified: boolean) => void;
   updateApplicationStatus: (
-    appId: string, 
-    newStatus: ApplicationStatus, 
-    officerName?: string, 
-    remarks?: string, 
+    appId: string,
+    newStatus: ApplicationStatus,
+    officerName?: string,
+    remarks?: string,
     approvedAmount?: string
   ) => void;
   resubmitApplicationRequirements: (
-    appId: string, 
-    documents: UploadedDocument[], 
+    appId: string,
+    documents: UploadedDocument[],
     note?: string
   ) => Promise<{ success: boolean; message?: string; application?: AssistanceApplication }>;
   deleteApplication: (appIdOrRef: string) => Promise<boolean>;
@@ -159,10 +158,10 @@ interface AppContextType {
   deleteNotification: (id: string) => void;
   clearAllNotifications: (userId?: string) => void;
   addNotification: (
-    title: string, 
-    message: string, 
-    userId?: string, 
-    type?: NotificationItem['type'], 
+    title: string,
+    message: string,
+    userId?: string,
+    type?: NotificationItem['type'],
     applicationRef?: string,
     targetArea?: NotificationItem['targetArea'],
     documentData?: NotificationDocumentData
@@ -220,7 +219,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [archivedItems, setArchivedItems] = useState<ArchiveItem[]>(INITIAL_ARCHIVED_ITEMS);
   const [disasterVictims, setDisasterVictims] = useState<DisasterVictimRecord[]>([]);
   const [hazardZones, setHazardZones] = useState<BugoHazardZone[]>(DEFAULT_BUGO_HAZARD_ZONES);
-  const [mapsApiKey, setMapsApiKey] = useState<string>(() => (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '').trim());
 
   const [selectedApplicationForReview, setSelectedApplicationForReview] = useState<AssistanceApplication | null>(null);
   const [selectedZoneForRegistry, setSelectedZoneForRegistry] = useState<string | null>(null);
@@ -243,7 +241,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       } else {
         sessionStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
       }
-    } catch {}
+    } catch { }
   };
 
   const getAuthHeaders = (extra?: Record<string, string>): Record<string, string> => {
@@ -265,7 +263,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const byId = localStorage.getItem(`bugo_avatar_${id}`);
         if (byId) return byId;
       }
-    } catch {}
+    } catch { }
     return null;
   };
 
@@ -274,7 +272,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       const saved = localStorage.getItem('bugo_census_data');
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { }
     return DEFAULT_BUGO_CENSUS;
   });
 
@@ -287,12 +285,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       try {
         localStorage.setItem('bugo_census_data', JSON.stringify(next));
-      } catch {}
+      } catch { }
       fetch('/api/census', {
         method: 'POST',
         headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ census: next })
-      }).catch(() => {});
+      }).catch(() => { });
       return next;
     });
   };
@@ -301,12 +299,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCensusData(DEFAULT_BUGO_CENSUS);
     try {
       localStorage.setItem('bugo_census_data', JSON.stringify(DEFAULT_BUGO_CENSUS));
-    } catch {}
+    } catch { }
     fetch('/api/census', {
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ census: DEFAULT_BUGO_CENSUS })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   // Inactivity tracking
@@ -341,15 +339,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         // Standalone fallback: in-memory mock data already active
       });
 
-    fetch('/api/config/maps')
-      .then(res => res.ok ? res.json() : null)
-      .then(cfg => {
-        if (cfg?.apiKey) {
-          setMapsApiKey(String(cfg.apiKey).trim());
-        }
-      })
-      .catch(() => {});
-
     // Restore authenticated JWT session across page reloads if valid
     const existingToken = authTokenRef.current;
     if (existingToken) {
@@ -369,7 +358,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             setStoredAuthToken(null);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, []);
 
@@ -427,19 +416,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addNotification = (
-    title: string, 
-    message: string, 
-    userId: string = 'all', 
-    type: NotificationItem['type'] = 'status_update', 
+    title: string,
+    message: string,
+    userId: string = 'all',
+    type: NotificationItem['type'] = 'status_update',
     applicationRef?: string,
     targetArea?: NotificationItem['targetArea'],
     documentData?: NotificationDocumentData
   ) => {
     // Non-repetitive check: do not insert duplicate notification if already exists
     setNotifications(prev => {
-      const isDuplicate = prev.some(n => 
-        (userId === 'all' || n.userId === userId) && 
-        n.title === title && 
+      const isDuplicate = prev.some(n =>
+        (userId === 'all' || n.userId === userId) &&
+        n.title === title &&
         n.message === message
       );
       if (isDuplicate) return prev;
@@ -478,7 +467,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(entry)
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   // Archive a record
@@ -497,7 +486,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(item)
-    }).catch(() => {});
+    }).catch(() => { });
 
     logActivity({
       residentName: item.deletedBy || 'Admin Juan Dela Cruz',
@@ -516,7 +505,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!item) return;
 
     setArchivedItems(prev => prev.filter(a => a.id !== id));
-    fetch(`/api/archives/${id}?restore=true`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => {});
+    fetch(`/api/archives/${id}?restore=true`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => { });
 
     logActivity({
       residentName: currentUser?.name || 'Admin',
@@ -532,7 +521,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deleteArchivedItemPermanently = (id: string) => {
     setArchivedItems(prev => prev.filter(a => a.id !== id));
-    fetch(`/api/archives/${id}`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => {});
+    fetch(`/api/archives/${id}`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => { });
   };
 
   const submitProfileChangeRequest = async (
@@ -604,7 +593,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       delete copy.pendingProfileUpdate;
       return copy;
     }));
-    fetch(`/api/residents/${currentUser.id}/profile-change-request`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => {});
+    fetch(`/api/residents/${currentUser.id}/profile-change-request`, { method: 'DELETE', headers: getAuthHeaders() }).catch(() => { });
   };
 
   const reviewProfileChangeRequest = async (
@@ -695,12 +684,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           localStorage.setItem(`bugo_avatar_${currentUser.email.toLowerCase().trim()}`, avatarUrl);
         }
         localStorage.setItem(`bugo_avatar_${currentUser.id}`, avatarUrl);
-      } catch {}
+      } catch { }
       fetch(`/api/residents/${currentUser.id}`, {
         method: 'PATCH',
         headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ avatarUrl })
-      }).catch(() => {});
+      }).catch(() => { });
     }
 
     // Non-avatar profile info updates by residents MUST go through Admin approval
@@ -716,7 +705,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         method: 'PATCH',
         headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ adminId: currentUser.id, ...otherUpdates })
-      }).catch(() => {});
+      }).catch(() => { });
     }
   };
 
@@ -989,10 +978,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setResidentTab('dashboard');
       lastActiveRef.current = Date.now();
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         residentId: newUser.id,
-        residentIdNumber: resData.residentIdNumber || newUser.residentIdNumber 
+        residentIdNumber: resData.residentIdNumber || newUser.residentIdNumber
       };
     } catch {
       // Local fallback
@@ -1055,7 +1044,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ adminId: currentUser?.id || 'admin-juan-delacruz', isVerified: true, registrationStatus: 'Verified', isBanned: false })
-    }).catch(() => {});
+    }).catch(() => { });
 
     addNotification('Resident Account Verified', `Account verified and approved.`, residentId, 'registration_approved');
   };
@@ -1082,7 +1071,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ adminId: currentUser?.id || 'admin-juan-delacruz', isVerified: false, isBanned: true, registrationStatus: 'Banned', banReason: reason })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const unbanResidentAccount = (residentId: string) => {
@@ -1097,7 +1086,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ adminId: currentUser?.id || 'admin-juan-delacruz', isVerified: true, isBanned: false, registrationStatus: 'Verified' })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const rejectResidentRegistration = (residentId: string, reason?: string) => {
@@ -1112,7 +1101,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ adminId: currentUser?.id || 'admin-juan-delacruz', isVerified: false, registrationStatus: 'Rejected' })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const addNewResidentRecord = (data: Partial<ResidentUser>) => {
@@ -1226,11 +1215,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(newApp)
-    }).catch(() => {});
+    }).catch(() => { });
 
     addNotification(
       isCapable ? 'New Service Application Submitted' : 'Application Flagged: Ineligible / Disqualified',
-      isCapable 
+      isCapable
         ? `Request ${newApp.referenceCode} for "${newApp.programTitle}" submitted by ${newApp.applicantName}.`
         : `Request ${newApp.referenceCode} by ${newApp.applicantName} does not meet eligibility boundaries (${evaluation.disqualifiedReason || 'Ineligible'}).`,
       'admin-juan-delacruz',
@@ -1243,9 +1232,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Admin updates Application Status
   const updateApplicationStatus = (
-    appId: string, 
-    newStatus: ApplicationStatus, 
-    officerName: string = 'Hon. Juan Dela Cruz (Brgy. Admin)', 
+    appId: string,
+    newStatus: ApplicationStatus,
+    officerName: string = 'Hon. Juan Dela Cruz (Brgy. Admin)',
     remarks?: string,
     approvedAmount?: string
   ) => {
@@ -1278,7 +1267,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ status: newStatus, officerName, remarks, approvedAmount })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const verifyApplicationDocument = (appId: string, docId: string, isVerified: boolean) => {
@@ -1379,7 +1368,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(newAnn)
-    }).catch(() => {});
+    }).catch(() => { });
 
     // If targeted to qualified beneficiaries only, dispatch targeted notifications & simulated SMS
     if (data.targetAudienceType === 'Qualified Beneficiaries Only' && data.targetProgramId) {
@@ -1412,7 +1401,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           method: 'POST',
           headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(notif)
-        }).catch(() => {});
+        }).catch(() => { });
       });
     }
   };
@@ -1574,7 +1563,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ id })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const markAllNotificationsAsRead = () => {
@@ -1583,7 +1572,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       method: 'PATCH',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ all: true, userId: currentUser?.id })
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const deleteNotification = (id: string) => {
@@ -1591,7 +1580,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fetch(`/api/notifications/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const clearAllNotifications = (userId?: string) => {
@@ -1605,7 +1594,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fetch(url, {
       method: 'DELETE',
       headers: getAuthHeaders()
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const incrementAnnouncementViews = async (id: string) => {
@@ -1618,7 +1607,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setAnnouncements(prev => prev.map(a => a.id === id ? { ...a, viewsCount: data.viewsCount } : a));
         }
       }
-    } catch {}
+    } catch { }
   };
 
   const addProgram = async (
@@ -1880,7 +1869,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         archivedItems,
         disasterVictims,
         hazardZones,
-        mapsApiKey,
         loginWithCredentials,
         loginAsDemoAdmin,
         loginAsDemoResident,

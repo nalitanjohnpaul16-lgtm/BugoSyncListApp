@@ -1,16 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  APIProvider,
-  APILoadingStatus,
-  Map as GoogleMap,
-  AdvancedMarker,
-  Pin,
-  InfoWindow,
-  Circle,
-  useAdvancedMarkerRef,
-  useApiLoadingStatus,
-  useMap
-} from '@vis.gl/react-google-maps';
+import { MapContainer, TileLayer, Marker, Circle, Popup, useMap, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   MapPin,
   Plus,
@@ -19,13 +10,10 @@ import {
   X,
   Move,
   Info,
-  Loader2,
-  CheckCircle2,
-  LocateFixed
+  CheckCircle2
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import {
-  BUGO_MAP_BOUNDS,
   BUGO_MAP_CENTER,
   HAZARD_CATEGORY_META,
   RISK_LEVEL_BADGES
@@ -33,100 +21,105 @@ import {
 import { BUGO_PUROKS } from '../../data/mockData';
 import { BugoHazardZone, HazardCategory, HazardRiskLevel } from '../../types';
 
+// Fix Leaflet default marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+});
+
 const CATEGORIES: HazardCategory[] = ['Flood', 'Landslide', 'Earthquake', 'Fire', 'Other'];
 const RISK_LEVELS: HazardRiskLevel[] = ['Low', 'Moderate', 'High'];
 
+// Create custom colored marker icons
+const createCustomIcon = (color: string, scale: number = 1) => {
+  const svgIcon = `
+    <svg width="${25 * scale}" height="${41 * scale}" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.5 0C5.596 0 0 5.596 0 12.5c0 9.375 12.5 28.125 12.5 28.125S25 21.875 25 12.5C25 5.596 19.404 0 12.5 0z" 
+            fill="${color}" stroke="#fff" stroke-width="2"/>
+      <circle cx="12.5" cy="12.5" r="6" fill="#fff"/>
+    </svg>
+  `;
+  return L.divIcon({
+    html: svgIcon,
+    className: 'custom-marker-icon',
+    iconSize: [25 * scale, 41 * scale],
+    iconAnchor: [12.5 * scale, 41 * scale],
+    popupAnchor: [0, -41 * scale]
+  });
+};
+
 interface HazardMarkerProps {
   zone: BugoHazardZone;
-  displayPosition: { lat: number; lng: number };
   isSelected: boolean;
   isBeingMoved: boolean;
   canManage: boolean;
   onSelect: (zone: BugoHazardZone) => void;
-  onDragPosition: (id: string, pos: { lat: number; lng: number }) => void;
-  onDragFinish: (zone: BugoHazardZone, pos: { lat: number; lng: number }) => void;
+  onDragEnd: (zone: BugoHazardZone, pos: { lat: number; lng: number }) => void;
   onStartMove: (zone: BugoHazardZone) => void;
   onEdit: (zone: BugoHazardZone) => void;
   onDelete: (id: string) => void;
-  onCloseInfo: () => void;
 }
 
 const HazardMarkerWithInfo: React.FC<HazardMarkerProps> = ({
   zone,
-  displayPosition,
   isSelected,
   isBeingMoved,
   canManage,
   onSelect,
-  onDragPosition,
-  onDragFinish,
+  onDragEnd,
   onStartMove,
   onEdit,
-  onDelete,
-  onCloseInfo
+  onDelete
 }) => {
-  const [markerRef, marker] = useAdvancedMarkerRef();
   const meta = HAZARD_CATEGORY_META[zone.disasterType] || HAZARD_CATEGORY_META.Other;
+  const markerRef = useRef<L.Marker>(null);
+
+  const icon = createCustomIcon(
+    meta.pinBg || '#ef4444',
+    isSelected || isBeingMoved ? 1.3 : 1.0
+  );
+
+  useEffect(() => {
+    if (isSelected && markerRef.current) {
+      markerRef.current.openPopup();
+    }
+  }, [isSelected]);
+
+  const handleDragEnd = () => {
+    const marker = markerRef.current;
+    if (marker && canManage) {
+      const pos = marker.getLatLng();
+      onDragEnd(zone, { lat: pos.lat, lng: pos.lng });
+    }
+  };
 
   return (
     <>
       <Circle
-        center={displayPosition}
+        center={[zone.lat, zone.lng]}
         radius={zone.radiusMeters || 180}
-        strokeColor={meta.circleStroke}
-        strokeOpacity={isBeingMoved ? 0.95 : 0.85}
-        strokeWeight={isBeingMoved ? 2.5 : 1.5}
-        fillColor={meta.circleFill}
-        fillOpacity={zone.riskLevel === 'High' ? 0.28 : zone.riskLevel === 'Moderate' ? 0.2 : 0.14}
-        clickable={false}
+        pathOptions={{
+          color: meta.circleStroke || '#ef4444',
+          fillColor: meta.circleFill || '#fee2e2',
+          fillOpacity: zone.riskLevel === 'High' ? 0.28 : zone.riskLevel === 'Moderate' ? 0.2 : 0.14,
+          weight: isBeingMoved ? 2.5 : 1.5,
+          opacity: isBeingMoved ? 0.95 : 0.85
+        }}
       />
 
-      <AdvancedMarker
+      <Marker
         ref={markerRef}
-        position={displayPosition}
+        position={[zone.lat, zone.lng]}
+        icon={icon}
         draggable={canManage}
-        title={
-          canManage
-            ? `${zone.name} (${zone.disasterType}) — Drag to move`
-            : `${zone.name} (${zone.disasterType} - ${zone.riskLevel})`
-        }
-        onClick={() => onSelect(zone)}
-        onDrag={
-          canManage
-            ? (e) => {
-                if (e.latLng) {
-                  onDragPosition(zone.id, {
-                    lat: e.latLng.lat(),
-                    lng: e.latLng.lng()
-                  });
-                }
-              }
-            : undefined
-        }
-        onDragEnd={
-          canManage
-            ? (e) => {
-                if (e.latLng) {
-                  onDragFinish(zone, {
-                    lat: e.latLng.lat(),
-                    lng: e.latLng.lng()
-                  });
-                }
-              }
-            : undefined
-        }
+        eventHandlers={{
+          click: () => onSelect(zone),
+          dragend: handleDragEnd
+        }}
       >
-        <Pin
-          background={meta.pinBg}
-          borderColor={isBeingMoved ? '#111827' : meta.pinBorder}
-          glyphColor="#ffffff"
-          glyphText={meta.pinGlyph}
-          scale={isSelected || isBeingMoved ? 1.3 : 1.1}
-        />
-      </AdvancedMarker>
-
-      {isSelected && marker && (
-        <InfoWindow anchor={marker} maxWidth={270} onCloseClick={onCloseInfo}>
+        <Popup maxWidth={270} closeButton={true}>
           <div className="p-1 space-y-2 text-xs text-gray-800">
             <div className="flex items-center justify-between gap-2">
               <span className={`px-2 py-0.5 rounded border text-[11px] font-bold ${meta.badgeClass}`}>
@@ -175,48 +168,49 @@ const HazardMarkerWithInfo: React.FC<HazardMarkerProps> = ({
               </div>
             )}
           </div>
-        </InfoWindow>
-      )}
+        </Popup>
+      </Marker>
     </>
   );
 };
 
-const MapPanner: React.FC<{ selectedZone: BugoHazardZone | null }> = ({ selectedZone }) => {
+interface MapPannerProps {
+  selectedZone: BugoHazardZone | null;
+}
+
+const MapPanner: React.FC<MapPannerProps> = ({ selectedZone }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!map || !selectedZone) return;
-    map.panTo({ lat: selectedZone.lat, lng: selectedZone.lng });
+    if (selectedZone) {
+      map.panTo([selectedZone.lat, selectedZone.lng], { animate: true });
+    }
   }, [map, selectedZone]);
 
   return null;
 };
 
-const MapStatusOverlay: React.FC = () => {
-  const status = useApiLoadingStatus();
+interface MapClickHandlerProps {
+  canManage: boolean;
+  pinModeCategory: HazardCategory | null;
+  movingZone: BugoHazardZone | null;
+  onMapClick: (coords: { lat: number; lng: number }) => void;
+}
 
-  if (status === APILoadingStatus.LOADED) return null;
-
-  if (status === APILoadingStatus.AUTH_FAILURE || status === APILoadingStatus.FAILED) {
-    return (
-      <div className="absolute inset-0 z-10 bg-gray-50/95 flex flex-col items-center justify-center p-6 text-center space-y-2">
-        <MapPin className="w-8 h-8 text-amber-600" />
-        <p className="text-sm font-bold text-gray-800">Unable to load Google Maps</p>
-        <p className="text-xs text-gray-500 max-w-sm">
-          {status === APILoadingStatus.AUTH_FAILURE
-            ? 'Google Maps rejected the API key or referrer configuration.'
-            : 'Failed to load Google Maps JavaScript API. Check network connectivity and try again.'}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="absolute inset-0 z-10 bg-gray-50/80 flex flex-col items-center justify-center gap-2 pointer-events-none">
-      <Loader2 className="w-6 h-6 text-[#0c532b] animate-spin" />
-      <span className="text-xs font-semibold text-gray-600">Loading Barangay Bugo map...</span>
-    </div>
-  );
+const MapClickHandler: React.FC<MapClickHandlerProps> = ({
+  canManage,
+  pinModeCategory,
+  movingZone,
+  onMapClick
+}) => {
+  useMapEvents({
+    click: (e) => {
+      if (canManage && (pinModeCategory || movingZone)) {
+        onMapClick({ lat: e.latlng.lat, lng: e.latlng.lng });
+      }
+    }
+  });
+  return null;
 };
 
 interface BugoHazardMapViewProps {
@@ -234,7 +228,6 @@ interface DetectedLocationInfo {
 export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage }) => {
   const {
     hazardZones,
-    mapsApiKey,
     addHazardZone,
     updateHazardZone,
     deleteHazardZone
@@ -246,7 +239,6 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
   // Simple Admin Pinning & Moving States
   const [pinModeCategory, setPinModeCategory] = useState<HazardCategory | null>(null);
   const [movingZoneId, setMovingZoneId] = useState<string | null>(null);
-  const [dragPreview, setDragPreview] = useState<{ id: string; lat: number; lng: number } | null>(null);
   const [statusNotice, setStatusNotice] = useState<string | null>(null);
 
   // Automatic Area / Zone Detection States
@@ -301,7 +293,6 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
       const res = await fetch(`/api/maps/reverse-geocode?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`);
       const data = await res.json().catch(() => null);
       if (res.status === 429 || data?.quotaExceeded) {
-        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
         return null;
       }
       if (!res.ok || !data?.success) return null;
@@ -481,7 +472,6 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
       purok: nextPurok,
       name: nextName
     });
-    setDragPreview(null);
     if (res.success && res.zone) {
       setSelectedZoneId(res.zone.id);
       showNotice(`Moved to ${res.zone.name}`);
@@ -557,11 +547,10 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
             <button
               type="button"
               onClick={() => setCategoryFilter('All')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
-                categoryFilter === 'All'
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer ${categoryFilter === 'All'
                   ? 'bg-gray-900 text-white border-gray-900'
                   : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-              }`}
+                }`}
             >
               All ({hazardZones.length})
             </button>
@@ -584,13 +573,12 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
                     setCategoryFilter(cat);
                   }
                 }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition cursor-pointer ${
-                  isActivePin
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition cursor-pointer ${isActivePin
                     ? 'bg-emerald-50 text-gray-900 border-[#0c532b] ring-2 ring-[#0c532b]/25'
                     : isActiveFilter
-                    ? 'bg-gray-900 text-white border-gray-900'
-                    : 'bg-white text-gray-800 border-gray-200 hover:bg-gray-50'
-                }`}
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-800 border-gray-200 hover:bg-gray-50'
+                  }`}
               >
                 <span className={`w-3 h-3 rounded-full shrink-0 ${meta.dotClass}`} />
                 <span>{meta.label}</span>
@@ -643,66 +631,43 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
           )}
 
           <div className={`w-full h-[460px] relative ${pinModeCategory || movingZone ? 'cursor-crosshair' : ''}`}>
-            {mapsApiKey ? (
-              <APIProvider apiKey={mapsApiKey} libraries={['marker']} language="en" region="PH">
-                <MapStatusOverlay />
-                <GoogleMap
-                  mapId="DEMO_MAP_ID"
-                  internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
-                  defaultCenter={BUGO_MAP_CENTER}
-                  defaultZoom={15}
-                  minZoom={13}
-                  maxZoom={18}
-                  restriction={{
-                    latLngBounds: BUGO_MAP_BOUNDS,
-                    strictBounds: false
-                  }}
-                  gestureHandling="greedy"
-                  mapTypeControl={true}
-                  streetViewControl={false}
-                  style={{ width: '100%', height: '100%' }}
-                  onClick={(ev) => {
-                    if (canManage && (pinModeCategory || movingZone) && ev.detail?.latLng) {
-                      handleMapClick({
-                        lat: ev.detail.latLng.lat,
-                        lng: ev.detail.latLng.lng
-                      });
-                    }
-                  }}
-                >
-                  <MapPanner selectedZone={selectedZone} />
-                  {visibleZones.map(zone => {
-                    const livePos =
-                      dragPreview && dragPreview.id === zone.id
-                        ? { lat: dragPreview.lat, lng: dragPreview.lng }
-                        : { lat: zone.lat, lng: zone.lng };
+            <MapContainer
+              center={[BUGO_MAP_CENTER.lat, BUGO_MAP_CENTER.lng]}
+              zoom={15}
+              minZoom={13}
+              maxZoom={18}
+              scrollWheelZoom={true}
+              style={{ width: '100%', height: '100%' }}
+              className="z-0"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
 
-                    return (
-                      <HazardMarkerWithInfo
-                        key={zone.id}
-                        zone={zone}
-                        displayPosition={livePos}
-                        isSelected={selectedZone?.id === zone.id}
-                        isBeingMoved={movingZoneId === zone.id}
-                        canManage={canManage}
-                        onSelect={(z) => setSelectedZoneId(z.id)}
-                        onDragPosition={(id, pos) => setDragPreview({ id, ...pos })}
-                        onDragFinish={handleMarkerDragFinish}
-                        onStartMove={startMoveZone}
-                        onEdit={openEditModal}
-                        onDelete={handleDeleteZone}
-                        onCloseInfo={() => setSelectedZoneId(null)}
-                      />
-                    );
-                  })}
-                </GoogleMap>
-              </APIProvider>
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 p-6 text-center space-y-2">
-                <Loader2 className="w-7 h-7 text-[#0c532b] animate-spin" />
-                <p className="text-sm font-bold text-gray-700">Loading Barangay Bugo map...</p>
-              </div>
-            )}
+              <MapPanner selectedZone={selectedZone} />
+              <MapClickHandler
+                canManage={canManage}
+                pinModeCategory={pinModeCategory}
+                movingZone={movingZone}
+                onMapClick={handleMapClick}
+              />
+
+              {visibleZones.map(zone => (
+                <HazardMarkerWithInfo
+                  key={zone.id}
+                  zone={zone}
+                  isSelected={selectedZone?.id === zone.id}
+                  isBeingMoved={movingZoneId === zone.id}
+                  canManage={canManage}
+                  onSelect={(z) => setSelectedZoneId(z.id)}
+                  onDragEnd={handleMarkerDragFinish}
+                  onStartMove={startMoveZone}
+                  onEdit={openEditModal}
+                  onDelete={handleDeleteZone}
+                />
+              ))}
+            </MapContainer>
           </div>
 
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-600">
@@ -746,13 +711,12 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
                   <div
                     key={z.id}
                     onClick={() => setSelectedZoneId(z.id)}
-                    className={`py-3 px-2.5 rounded-xl cursor-pointer transition space-y-1.5 ${
-                      movingZoneId === z.id
+                    className={`py-3 px-2.5 rounded-xl cursor-pointer transition space-y-1.5 ${movingZoneId === z.id
                         ? 'bg-amber-50 border border-amber-200'
                         : active
-                        ? 'bg-emerald-50/80'
-                        : 'hover:bg-gray-50'
-                    }`}
+                          ? 'bg-emerald-50/80'
+                          : 'hover:bg-gray-50'
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className={`px-2 py-0.5 rounded-md border text-[11px] font-bold ${meta.badgeClass}`}>
@@ -813,209 +777,168 @@ export const BugoHazardMapView: React.FC<BugoHazardMapViewProps> = ({ canManage 
         </div>
       </div>
 
-      {/* Simple, Clean Pin Details Modal */}
-      {isModalOpen && canManage && (
-        <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 border border-gray-200 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <h2 className="text-base font-extrabold text-gray-900">
-                {editingZone ? 'Edit Hazard Pin' : 'Save Hazard Pin'}
+      {/* Add/Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-lg font-extrabold text-gray-900">
+                {editingZone ? 'Edit Hazard Zone' : 'Pin New Hazard Zone'}
               </h2>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {formError && (
-              <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs font-semibold">
-                {formError}
-              </div>
-            )}
-
-            <form onSubmit={handleSaveZone} className="space-y-4 text-xs">
-              {/* Visual Legend Picker */}
-              <div>
-                <label className="block font-bold text-gray-800 mb-1.5">Hazard Legend</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {CATEGORIES.map(cat => {
-                    const meta = HAZARD_CATEGORY_META[cat];
-                    const selected = form.disasterType === cat;
-                    return (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => setForm({ ...form, disasterType: cat })}
-                        className={`px-2.5 py-1.5 rounded-xl font-bold border flex items-center gap-1.5 transition cursor-pointer ${
-                          selected
-                            ? 'bg-gray-900 text-white border-gray-900'
-                            : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
-                        }`}
-                      >
-                        <span className={`w-2.5 h-2.5 rounded-full ${meta.dotClass}`} />
-                        <span>{meta.label}</span>
-                      </button>
-                    );
-                  })}
+            <form onSubmit={handleSaveZone} className="p-6 space-y-4">
+              {formError && (
+                <div className="px-3 py-2 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 font-semibold">
+                  {formError}
                 </div>
-              </div>
+              )}
 
-              {/* Auto-Located Specific Area & Zone */}
-              <div className="px-3 py-2 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  {isLocatingArea ? (
-                    <Loader2 className="w-4 h-4 text-[#0c532b] animate-spin shrink-0" />
-                  ) : (
-                    <LocateFixed className="w-4 h-4 text-[#0c532b] shrink-0" />
-                  )}
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-bold text-emerald-950 truncate">
-                      {isLocatingArea
-                        ? 'Locating specific area & zone...'
-                        : detectedLocation
-                        ? `Detected: ${detectedLocation.suggestedTitle}`
-                        : 'Area ready'}
-                    </p>
-                    {detectedLocation && !isLocatingArea && (
-                      <p className="text-[10px] text-emerald-800 truncate">
-                        {detectedLocation.matchedZone}
-                      </p>
-                    )}
-                  </div>
+              {detectedLocation && !isLocatingArea && (
+                <div className="px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                  <p className="font-bold">Detected Location:</p>
+                  <p className="mt-1">{detectedLocation.formattedAddress}</p>
                 </div>
-                {editingZone && detectedLocation && !isLocatingArea && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      nameManuallyEditedRef.current = true;
-                      setForm(prev => ({
-                        ...prev,
-                        name: detectedLocation.suggestedTitle,
-                        purok: detectedLocation.matchedZone
-                      }));
-                    }}
-                    className="px-2.5 py-1 bg-white border border-emerald-300 hover:bg-emerald-100 text-[#0c532b] text-[11px] font-bold rounded-lg shrink-0 cursor-pointer"
-                  >
-                    Use Detected
-                  </button>
-                )}
-              </div>
+              )}
 
-              {/* Place Name */}
               <div>
-                <label className="block font-bold text-gray-800 mb-1">Place / Area Name *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1">
+                  Place Name *
+                </label>
                 <input
                   type="text"
-                  required
                   value={form.name}
                   onChange={(e) => {
                     nameManuallyEditedRef.current = true;
                     setForm({ ...form, name: e.target.value });
                   }}
-                  placeholder={isLocatingArea ? 'Detecting area name...' : 'e.g. Zone 2 Creek Overflow'}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  placeholder="e.g. Riverside Area"
+                  required
                 />
               </div>
 
-              {/* Risk Level + Purok */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-gray-800 mb-1.5">Risk Level</label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {RISK_LEVELS.map(level => (
-                      <button
-                        key={level}
-                        type="button"
-                        onClick={() => setForm({ ...form, riskLevel: level })}
-                        className={`py-2 rounded-xl font-bold border transition cursor-pointer ${
-                          form.riskLevel === level
-                            ? 'bg-gray-900 text-white border-gray-900'
-                            : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                        }`}
-                      >
-                        {level}
-                      </button>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Disaster Type *
+                  </label>
+                  <select
+                    value={form.disasterType}
+                    onChange={(e) => setForm({ ...form, disasterType: e.target.value as HazardCategory })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  >
+                    {CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
                     ))}
-                  </div>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-gray-800 mb-1.5">Purok / Zone</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Risk Level *
+                  </label>
                   <select
-                    value={form.purok}
-                    onChange={(e) => setForm({ ...form, purok: e.target.value })}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 font-semibold outline-none"
+                    value={form.riskLevel}
+                    onChange={(e) => setForm({ ...form, riskLevel: e.target.value as HazardRiskLevel })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
                   >
-                    {BUGO_PUROKS.map(p => (
-                      <option key={p} value={p}>{p.split(' - ')[0]}</option>
+                    {RISK_LEVELS.map(level => (
+                      <option key={level} value={level}>{level}</option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              {/* Simple Radius Slider */}
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="font-bold text-gray-800">Affected Area Size</label>
-                  <span className="font-extrabold text-[#0c532b]">{form.radiusMeters} meters</span>
-                </div>
-                <input
-                  type="range"
-                  min={50}
-                  max={800}
-                  step={10}
-                  value={Math.min(800, Math.max(50, form.radiusMeters))}
-                  onChange={(e) => setForm({ ...form, radiusMeters: Number(e.target.value) })}
-                  className="w-full accent-[#0c532b] cursor-pointer"
-                />
+                <label className="block text-xs font-bold text-gray-700 mb-1">
+                  Purok/Zone *
+                </label>
+                <select
+                  value={form.purok}
+                  onChange={(e) => setForm({ ...form, purok: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                >
+                  {BUGO_PUROKS.map(purok => (
+                    <option key={purok} value={purok}>{purok}</option>
+                  ))}
+                </select>
               </div>
 
-              {/* Short Note */}
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Latitude
+                  </label>
+                  <input
+                    type="number"
+                    step="0.000001"
+                    value={form.lat}
+                    onChange={(e) => setForm({ ...form, lat: parseFloat(e.target.value) })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Longitude
+                  </label>
+                  <input
+                    type="number"
+                    step="0.000001"
+                    value={form.lng}
+                    onChange={(e) => setForm({ ...form, lng: parseFloat(e.target.value) })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Radius (m)
+                  </label>
+                  <input
+                    type="number"
+                    min="50"
+                    max="2000"
+                    value={form.radiusMeters}
+                    onChange={(e) => setForm({ ...form, radiusMeters: parseInt(e.target.value) })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block font-bold text-gray-800 mb-1">Short Note (Optional)</label>
-                <input
-                  type="text"
+                <label className="block text-xs font-bold text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Brief warning for residents..."
-                  className="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0c532b]"
+                  placeholder="Describe this hazard area..."
                 />
               </div>
 
-              {/* Clean Spot Footer + Move on Map option when editing */}
-              {editingZone && (
-                <div className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-xl border border-gray-200">
-                  <span className="text-[11px] text-gray-600">
-                    Spot: {form.lat.toFixed(4)}, {form.lng.toFixed(4)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => startMoveZone(editingZone)}
-                    className="text-xs font-bold text-amber-700 hover:text-amber-900 flex items-center gap-1 cursor-pointer"
-                  >
-                    <Move className="w-3.5 h-3.5" />
-                    <span>Move Pin on Map</span>
-                  </button>
-                </div>
-              )}
-
-              <div className="flex gap-2 pt-1">
+              <div className="flex items-center gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl cursor-pointer"
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 py-2.5 bg-[#0c532b] hover:bg-[#094222] text-white font-bold rounded-xl cursor-pointer disabled:opacity-60"
+                  className="flex-1 px-4 py-2 bg-[#0c532b] hover:bg-[#094222] text-white font-bold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {saving ? 'Saving...' : 'Save Pin'}
+                  {saving ? 'Saving...' : editingZone ? 'Update Zone' : 'Pin Zone'}
                 </button>
               </div>
             </form>

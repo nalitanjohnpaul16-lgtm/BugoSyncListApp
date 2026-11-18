@@ -601,12 +601,13 @@ app.use(
       ? {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", 'https://maps.googleapis.com', 'https://maps.gstatic.com'],
-          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-          imgSrc: ["'self'", 'data:', 'blob:', 'https://api.dicebear.com', 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
-          connectSrc: ["'self'", 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
-          workerSrc: ["'self'", 'blob:'],
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // unsafe-eval needed for Tesseract.js
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          fontSrc: ["'self'", 'data:'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https://api.dicebear.com', 'https://*.tile.openstreetmap.org', 'https://unpkg.com'], // OpenStreetMap tiles
+          connectSrc: ["'self'", 'https://unpkg.com'], // Tesseract worker files
+          workerSrc: ["'self'", 'blob:', 'https://unpkg.com'], // Tesseract workers
+          childSrc: ["'self'", 'blob:'],
           frameAncestors: ["'self'"],
         },
       }
@@ -2148,7 +2149,7 @@ app.post('/api/ai/validate-id-photo', async (req, res) => {
       // Perform OCR using Tesseract.js
       const imageBuffer = Buffer.from(rawBase64, 'base64');
       const result = await Tesseract.recognize(imageBuffer, 'eng', {
-        logger: () => {} // Suppress logs
+        logger: () => { } // Suppress logs
       });
 
       const extractedText = result.data.text || '';
@@ -2156,7 +2157,7 @@ app.post('/api/ai/validate-id-photo', async (req, res) => {
 
       // Analyze extracted text for ID validation
       const textLower = extractedText.toLowerCase();
-      const hasIdKeywords = 
+      const hasIdKeywords =
         textLower.includes('republic') ||
         textLower.includes('philippines') ||
         textLower.includes('license') ||
@@ -2171,7 +2172,7 @@ app.post('/api/ai/validate-id-photo', async (req, res) => {
         textLower.includes('comelec') ||
         textLower.includes('barangay');
 
-      const hasPersonalInfo = 
+      const hasPersonalInfo =
         /\b[A-Z][a-z]+\s+[A-Z][a-z]+/.test(extractedText) || // Name pattern
         /\d{4}-\d{4}-\d{4}/.test(extractedText) || // ID number pattern
         /\d{2}\/\d{2}\/\d{4}/.test(extractedText); // Date pattern
@@ -2221,11 +2222,11 @@ app.post('/api/ai/validate-id-photo', async (req, res) => {
           isId: isId,
           isClear: isClear,
           detectedDocType: detectedIdType || `${idSide === 'back' ? 'Back' : 'Front'} ID`,
-          warning: !isId 
-            ? `Not a valid ${idSide} ID. Does not qualify.` 
+          warning: !isId
+            ? `Not a valid ${idSide} ID. Does not qualify.`
             : (!isClear ? 'Photo is not clear. Please try again.' : null),
-          advice: isId 
-            ? (isClear ? 'Valid ID detected.' : 'Please retake a clearer photo and try again.') 
+          advice: isId
+            ? (isClear ? 'Valid ID detected.' : 'Please retake a clearer photo and try again.')
             : 'Attach a valid ID photo and try again.',
           score: isId ? (isClear ? 90 : 40) : 20,
           extractedName: extractedName,

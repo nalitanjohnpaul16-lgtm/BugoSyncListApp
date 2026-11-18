@@ -226,14 +226,7 @@ SEED_RESIDENT_PASSWORD=BugoResident@Secure2026!#
 # Change this to your desired resident password
 ```
 
-### Optional Variables:
 
-```bash
-VITE_GOOGLE_MAPS_API_KEY=
-# If you have a Google Maps API key
-
-GEMINI_API_KEY=
-# If you have Gemini API key for AI features
 ```
 
 ### How to Generate Secrets:

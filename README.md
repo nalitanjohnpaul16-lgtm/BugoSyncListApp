@@ -21,7 +21,7 @@ A web-based resident assistance application, tracking, and record management sys
 - **Strong Password Policy**: Enforces 5 security criteria (minimum 8 characters, uppercase, lowercase, numbers, and special symbols) with real-time visual progress meters and checklist feedback.
 - **Two-Step Verification for Password Updates**: Modifying account credentials requires prior verification via **Old Password** or a **6-digit One-Time Security Code (OTP)**.
 - **PBKDF2-SHA512 Cryptographic Hashing**: Salted password protection with brute-force rate-limiting on authentication endpoints.
-- **AI-Powered ID Document Inspection**: Multimodal Gemini 3.8 Flash Vision integration to verify authenticity and legibility of uploaded citizen identification cards.
+- **OCR-Powered ID Document Verification**: Tesseract.js integration to extract and verify text from uploaded citizen identification cards.
 
 ### 3. Benefit Application & QR Claim Vouchers
 - Online application wizard with step-by-step document submission.
@@ -89,8 +89,8 @@ npm start
 - **Backend**: Node.js, Express, tsx
 - **Database**: PostgreSQL with Prisma ORM
 - **Maps**: OpenStreetMap + Leaflet.js (free, no API key required)
+- **ID Verification**: Tesseract.js OCR (free, runs locally, no API key required)
 - **Cryptographic Security**: PBKDF2-SHA512 Password Hashing, HMAC-SHA256 Voucher Tokens
-- **AI Integration**: `@google/genai` (Gemini 3.8 Flash Vision for ID card scrutiny)
 
 ---
 

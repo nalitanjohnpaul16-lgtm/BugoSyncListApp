@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import helmet from 'helmet';
-import { GoogleGenAI, Type } from '@google/genai';
+import Tesseract from 'tesseract.js';
 import { evaluateApplicantEligibility, evaluateResidentForProgram, getQualifiedProgramsForResident, isCertificateProgram, isWalkInOrOnDemandService } from './src/utils/eligibilityEngine';
 import { ALL_BARANGAY_SERVICES } from './src/data/servicesCatalog';
 import { DEFAULT_BUGO_HAZARD_ZONES } from './src/data/hazardDefaults';
@@ -121,19 +121,6 @@ function logInfo(event: string, meta?: Record<string, any>) {
     event,
     ...(meta || {}),
   }));
-}
-
-// Initialize Gemini SDK with User-Agent telemetry
-let aiClient: GoogleGenAI | null = null;
-if (process.env.GEMINI_API_KEY) {
-  aiClient = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    httpOptions: {
-      headers: {
-        'User-Agent': 'aistudio-build'
-      }
-    }
-  });
 }
 
 // Ensure data directory exists
@@ -612,17 +599,17 @@ app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
       ? {
-          directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", 'https://maps.googleapis.com', 'https://maps.gstatic.com'],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-            fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-            imgSrc: ["'self'", 'data:', 'blob:', 'https://api.dicebear.com', 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
-            connectSrc: ["'self'", 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
-            workerSrc: ["'self'", 'blob:'],
-            frameAncestors: ["'self'"],
-          },
-        }
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://maps.googleapis.com', 'https://maps.gstatic.com'],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https://api.dicebear.com', 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
+          connectSrc: ["'self'", 'https://maps.googleapis.com', 'https://maps.gstatic.com', 'https://*.googleapis.com', 'https://*.gstatic.com'],
+          workerSrc: ["'self'", 'blob:'],
+          frameAncestors: ["'self'"],
+        },
+      }
       : false,
     crossOriginEmbedderPolicy: false,
   })
@@ -2155,95 +2142,110 @@ app.post('/api/ai/validate-id-photo', async (req, res) => {
     hasValidRasterImageBytes = false;
   }
 
-  if (aiClient && hasValidRasterImageBytes) {
+  // Use Tesseract OCR for ID verification (completely free, runs locally, no API key needed)
+  if (hasValidRasterImageBytes) {
     try {
-      const sideExpectation = idSide === 'back'
-        ? 'This must be the BACK side of an official ID card (showing signature, barcode/QR, address, thumbprint, emergency contact, terms, or back of card). It does not need a face photo, as long as it is clearly the back of an official ID card.'
-        : 'This must be the FRONT side of an official ID card (showing ID layout, holder name/photo, or card front details).';
-
-      const prompt = `You are an official ID inspector for Barangay Bugo.
-Inspect this uploaded ${idSide.toUpperCase()} ID photo strictly:
-1. ${sideExpectation}
-2. Is this image an official ID card (PhilSys National ID, Driver's License, UMID, Postal ID, PRC, Voter's ID, Student ID, Senior Citizen OSCA ID, PWD ID, Solo Parent ID, Barangay Resident ID)? Set isId=false if it is NOT an ID (selfie, landscape, pet, food, meme, screenshot, blank page, or random object).
-3. Is the photo clear, bright, focused, and readable? Set isClear=false if it is blurry, dark, glared, heavily cropped, or unreadable.
-4. Keep "warning" and "advice" VERY SHORT and SIMPLE (max 10 words each):
-   - If isId is false: warning="Not a valid ID. Does not qualify.", advice="Attach a valid ID photo and try again."
-   - If isId is true and isClear is false: warning="Photo is not clear. Please try again.", advice="Retake in good lighting and try again."
-5. Extract visible details if readable (empty string or 0 if not visible on ${idSide} side):
-   - extractedName, extractedIdType (one of: "PhilSys National ID", "UMID (Unified Multi-Purpose ID)", "Driver’s License", "COMELEC Voter’s ID / Certificate", "Senior Citizen OSCA ID", "Person with Disability (PWD) ID", "Solo Parent ID Card", "Student School ID Card", "Postal ID", "Barangay Resident ID Card", "PRC Professional License"), extractedIdNumber, extractedAddress, extractedAge, extractedGender ("Male", "Female", or ""), isSenior, isPwd, isSoloParent, isStudent.
-
-Respond in strict JSON with the required schema.`;
-
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-4-hydrogen',
-        contents: [
-          {
-            parts: [
-              {
-                inlineData: {
-                  mimeType: detectedMime,
-                  data: rawBase64
-                }
-              },
-              { text: prompt }
-            ]
-          }
-        ],
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              isId: { type: Type.BOOLEAN },
-              isClear: { type: Type.BOOLEAN },
-              detectedDocType: { type: Type.STRING },
-              warning: { type: Type.STRING },
-              advice: { type: Type.STRING },
-              score: { type: Type.INTEGER },
-              extractedName: { type: Type.STRING },
-              extractedIdType: { type: Type.STRING },
-              extractedIdNumber: { type: Type.STRING },
-              extractedAddress: { type: Type.STRING },
-              extractedAge: { type: Type.INTEGER },
-              extractedGender: { type: Type.STRING },
-              isSenior: { type: Type.BOOLEAN },
-              isPwd: { type: Type.BOOLEAN },
-              isSoloParent: { type: Type.BOOLEAN },
-              isStudent: { type: Type.BOOLEAN }
-            },
-            required: ['isId', 'isClear', 'detectedDocType', 'score']
-          }
-        }
+      // Perform OCR using Tesseract.js
+      const imageBuffer = Buffer.from(rawBase64, 'base64');
+      const result = await Tesseract.recognize(imageBuffer, 'eng', {
+        logger: () => {} // Suppress logs
       });
 
-      const responseText = response.text || '{}';
-      const parsed = JSON.parse(responseText);
+      const extractedText = result.data.text || '';
+      const confidence = result.data.confidence || 0;
+
+      // Analyze extracted text for ID validation
+      const textLower = extractedText.toLowerCase();
+      const hasIdKeywords = 
+        textLower.includes('republic') ||
+        textLower.includes('philippines') ||
+        textLower.includes('license') ||
+        textLower.includes('identification') ||
+        textLower.includes('id card') ||
+        textLower.includes('voter') ||
+        textLower.includes('senior') ||
+        textLower.includes('student') ||
+        textLower.includes('pwd') ||
+        textLower.includes('umid') ||
+        textLower.includes('philsys') ||
+        textLower.includes('comelec') ||
+        textLower.includes('barangay');
+
+      const hasPersonalInfo = 
+        /\b[A-Z][a-z]+\s+[A-Z][a-z]+/.test(extractedText) || // Name pattern
+        /\d{4}-\d{4}-\d{4}/.test(extractedText) || // ID number pattern
+        /\d{2}\/\d{2}\/\d{4}/.test(extractedText); // Date pattern
+
+      const isId = hasIdKeywords || hasPersonalInfo;
+      const isClear = confidence > 60 && extractedText.length > 20;
+
+      // Extract information from text
+      const nameMatch = extractedText.match(/(?:NAME|Name|FULLNAME|Full Name)[:\s]*([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})/i);
+      const extractedName = nameMatch ? nameMatch[1].trim() : '';
+
+      const idNumberMatch = extractedText.match(/(?:ID|LICENSE|NO|NUMBER)[:\s#]*([A-Z0-9-]+)/i);
+      const extractedIdNumber = idNumberMatch ? idNumberMatch[1].trim() : '';
+
+      const addressMatch = extractedText.match(/(?:ADDRESS|ADDR)[:\s]*(.*?)(?:\n|$)/i);
+      const extractedAddress = addressMatch ? addressMatch[1].trim() : '';
+
+      const ageMatch = extractedText.match(/(?:AGE|BIRTH|DOB)[:\s]*.*?(\d{1,3})/i);
+      const extractedAge = ageMatch ? parseInt(ageMatch[1]) : 0;
+
+      const genderMatch = extractedText.match(/(?:SEX|GENDER)[:\s]*(MALE|FEMALE|M|F)/i);
+      const extractedGender = genderMatch ? (genderMatch[1].toUpperCase().startsWith('M') ? 'Male' : 'Female') : '';
+
+      // Detect ID type
+      let detectedIdType = '';
+      if (textLower.includes('driver') || textLower.includes('license')) detectedIdType = 'Driver\'s License';
+      else if (textLower.includes('philsys') || textLower.includes('national id')) detectedIdType = 'PhilSys National ID';
+      else if (textLower.includes('umid')) detectedIdType = 'UMID (Unified Multi-Purpose ID)';
+      else if (textLower.includes('voter') || textLower.includes('comelec')) detectedIdType = 'COMELEC Voter\'s ID / Certificate';
+      else if (textLower.includes('senior') || textLower.includes('osca')) detectedIdType = 'Senior Citizen OSCA ID';
+      else if (textLower.includes('pwd') || textLower.includes('disability')) detectedIdType = 'Person with Disability (PWD) ID';
+      else if (textLower.includes('solo parent')) detectedIdType = 'Solo Parent ID Card';
+      else if (textLower.includes('student') || textLower.includes('school')) detectedIdType = 'Student School ID Card';
+      else if (textLower.includes('postal')) detectedIdType = 'Postal ID';
+      else if (textLower.includes('barangay')) detectedIdType = 'Barangay Resident ID Card';
+      else if (textLower.includes('prc') || textLower.includes('professional')) detectedIdType = 'PRC Professional License';
+
+      // Detect flags
+      const isSenior = textLower.includes('senior') || textLower.includes('osca') || extractedAge >= 60;
+      const isPwd = textLower.includes('pwd') || textLower.includes('disability');
+      const isSoloParent = textLower.includes('solo parent');
+      const isStudent = textLower.includes('student') || textLower.includes('school');
 
       return res.json({
         success: true,
         analysis: {
-          isId: Boolean(parsed.isId),
-          isClear: Boolean(parsed.isClear),
-          detectedDocType: parsed.detectedDocType || `${idSide === 'back' ? 'Back' : 'Front'} ID`,
-          warning: parsed.warning || (!parsed.isId ? `Not a valid ${idSide} ID. Does not qualify.` : (!parsed.isClear ? 'Photo is not clear. Please try again.' : null)),
-          advice: parsed.advice || (parsed.isId ? (parsed.isClear ? 'Valid ID detected.' : 'Please retake a clearer photo and try again.') : 'Attach a valid ID photo and try again.'),
-          score: typeof parsed.score === 'number' ? parsed.score : (parsed.isId ? (parsed.isClear ? 90 : 40) : 20),
-          extractedName: parsed.extractedName || '',
-          extractedIdType: parsed.extractedIdType || '',
-          extractedIdNumber: parsed.extractedIdNumber || '',
-          extractedAddress: parsed.extractedAddress || '',
-          extractedAge: typeof parsed.extractedAge === 'number' ? parsed.extractedAge : 0,
-          extractedGender: parsed.extractedGender === 'Male' || parsed.extractedGender === 'Female' ? parsed.extractedGender : '',
+          isId: isId,
+          isClear: isClear,
+          detectedDocType: detectedIdType || `${idSide === 'back' ? 'Back' : 'Front'} ID`,
+          warning: !isId 
+            ? `Not a valid ${idSide} ID. Does not qualify.` 
+            : (!isClear ? 'Photo is not clear. Please try again.' : null),
+          advice: isId 
+            ? (isClear ? 'Valid ID detected.' : 'Please retake a clearer photo and try again.') 
+            : 'Attach a valid ID photo and try again.',
+          score: isId ? (isClear ? 90 : 40) : 20,
+          extractedName: extractedName,
+          extractedIdType: detectedIdType,
+          extractedIdNumber: extractedIdNumber,
+          extractedAddress: extractedAddress,
+          extractedAge: extractedAge,
+          extractedGender: extractedGender,
           detectedFlags: {
-            isSenior: Boolean(parsed.isSenior),
-            isPwd: Boolean(parsed.isPwd),
-            isSoloParent: Boolean(parsed.isSoloParent),
-            isStudent: Boolean(parsed.isStudent)
-          }
+            isSenior: isSenior,
+            isPwd: isPwd,
+            isSoloParent: isSoloParent,
+            isStudent: isStudent
+          },
+          ocrConfidence: Math.round(confidence),
+          extractedText: extractedText.substring(0, 500) // First 500 chars for debugging
         }
       });
     } catch (err) {
-      logServerError('gemini_vision_fallback', err);
+      logServerError('tesseract_ocr_fallback', err);
     }
   }
 
@@ -2287,22 +2289,22 @@ Respond in strict JSON with the required schema.`;
   const inferredIdType = detectedSenior
     ? 'Senior Citizen OSCA ID'
     : detectedPwd
-    ? 'Person with Disability (PWD) ID'
-    : detectedSolo
-    ? 'Solo Parent ID Card'
-    : detectedStudent
-    ? 'Student School ID Card'
-    : nameLower.includes('driver')
-    ? 'Driver’s License'
-    : nameLower.includes('voter')
-    ? 'COMELEC Voter’s ID / Certificate'
-    : nameLower.includes('umid')
-    ? 'UMID (Unified Multi-Purpose ID)'
-    : nameLower.includes('postal')
-    ? 'Postal ID'
-    : nameLower.includes('philsys') || nameLower.includes('national')
-    ? 'PhilSys National ID'
-    : 'Official Identification Document';
+      ? 'Person with Disability (PWD) ID'
+      : detectedSolo
+        ? 'Solo Parent ID Card'
+        : detectedStudent
+          ? 'Student School ID Card'
+          : nameLower.includes('driver')
+            ? 'Driver’s License'
+            : nameLower.includes('voter')
+              ? 'COMELEC Voter’s ID / Certificate'
+              : nameLower.includes('umid')
+                ? 'UMID (Unified Multi-Purpose ID)'
+                : nameLower.includes('postal')
+                  ? 'Postal ID'
+                  : nameLower.includes('philsys') || nameLower.includes('national')
+                    ? 'PhilSys National ID'
+                    : 'Official Identification Document';
 
   return res.json({
     success: true,
@@ -3633,8 +3635,8 @@ app.post('/api/disaster-victims', authenticateJWT, requireRole('admin'), (req: A
 
   const rawRequestedIds: string[] = Array.isArray(body.enrolledProgramIds)
     ? body.enrolledProgramIds
-        .filter((id: any) => id !== null && id !== undefined && String(id).trim() !== '' && String(id) !== 'null' && String(id) !== 'undefined')
-        .map((id: any) => String(id).trim())
+      .filter((id: any) => id !== null && id !== undefined && String(id).trim() !== '' && String(id) !== 'null' && String(id) !== 'undefined')
+      .map((id: any) => String(id).trim())
     : [];
 
   const requestedIds = rawRequestedIds.filter(pid => {
@@ -3758,12 +3760,12 @@ app.patch('/api/disaster-victims/:id', authenticateJWT, requireRole('admin'), (r
 
   const baseEnrolledIds: string[] = Array.isArray(updates.enrolledProgramIds)
     ? Array.from(
-        new Set(
-          updates.enrolledProgramIds
-            .filter((pid: any) => pid !== null && pid !== undefined && String(pid).trim() !== '' && String(pid) !== 'null' && String(pid) !== 'undefined')
-            .map((pid: any) => String(pid).trim())
-        )
+      new Set(
+        updates.enrolledProgramIds
+          .filter((pid: any) => pid !== null && pid !== undefined && String(pid).trim() !== '' && String(pid) !== 'null' && String(pid) !== 'undefined')
+          .map((pid: any) => String(pid).trim())
       )
+    )
     : [...(existing.enrolledProgramIds || [])];
 
   // Keep only programs matching the victim's disasterType & ensure active qualifying disaster programs are synced without duplicate resident entries
@@ -3991,16 +3993,16 @@ app.get('/api/admin/export-records', authenticateJWT, requireRole('admin'), (req
 
   const payload = type === 'all'
     ? {
-        exportedAt: new Date().toISOString(),
-        system: 'Barangay Bugo Citizen & Disaster Records',
-        ...datasets
-      }
+      exportedAt: new Date().toISOString(),
+      system: 'Barangay Bugo Citizen & Disaster Records',
+      ...datasets
+    }
     : {
-        exportedAt: new Date().toISOString(),
-        type,
-        ...(targetProgram ? { programId: targetProgram.id, programTitle: targetProgram.title } : {}),
-        records: datasets[type] || []
-      };
+      exportedAt: new Date().toISOString(),
+      type,
+      ...(targetProgram ? { programId: targetProgram.id, programTitle: targetProgram.title } : {}),
+      records: datasets[type] || []
+    };
 
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="bugo_${fileSlug}_${new Date().toISOString().slice(0, 10)}.json"`);
@@ -4137,8 +4139,8 @@ app.post('/api/admin/import-records', authenticateJWT, requireRole('admin'), (re
         const itemResKey = getVictimResidentKey(item);
         const existingSameResidentInProgram = scopedProgramId
           ? (db.disasterVictims as any[]).find(
-              v => getVictimResidentKey(v) === itemResKey && Array.isArray(v.enrolledProgramIds) && v.enrolledProgramIds.includes(scopedProgramId)
-            )
+            v => getVictimResidentKey(v) === itemResKey && Array.isArray(v.enrolledProgramIds) && v.enrolledProgramIds.includes(scopedProgramId)
+          )
           : undefined;
         if (existingSameResidentInProgram) {
           continue;

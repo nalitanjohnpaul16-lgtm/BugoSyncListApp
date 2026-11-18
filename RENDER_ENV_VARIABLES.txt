@@ -32,10 +32,4 @@ SEED_ADMIN_PASSWORD=BugoAdmin@Secure2026!#
 
 SEED_RESIDENT_PASSWORD=BugoResident@Secure2026!#
 
-Optional Variables:
--------------------
-
-GEMINI_API_KEY=AIzaSyAQDQ.Ab8RN6IhQ8D0-4shJLfyCvYr4pIbEFpNxwz7o5ZYCUWQMNlMEQ
-# For AI-powered ID verification
-
 ========================================

@@ -116,16 +116,10 @@ SEED_ADMIN_PASSWORD=BugoAdmin@Secure2026!#
 SEED_RESIDENT_PASSWORD=BugoResident@Secure2026!#
 ```
 
-#### Optional Variables (For Enhanced Features):
-
-```
-GEMINI_API_KEY=AIzaSyAQDQ.Ab8RN6IhQ8D0-4shJLfyCvYr4pIbEFpNxwz7o5ZYCUWQMNlMEQ
-```
-*(Only needed for AI-powered ID verification. App works without it.)*
-
 **Note:** 
 - If you named your service differently than "bugo-sync-list", update APP_URL and CORS_ORIGIN accordingly!
-- The hazard map now uses **OpenStreetMap** (free, no API key needed) 🗺️
+- The hazard map uses **OpenStreetMap** (free, no API key) 🗺️
+- ID verification uses **Tesseract OCR** (free, runs locally, no API key) 🔍
 
 ---
 

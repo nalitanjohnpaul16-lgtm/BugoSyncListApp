@@ -1493,7 +1493,7 @@ app.get('/api/deployment/status', async (_req, res) => {
   const mysqlDdlExists = fs.existsSync(path.resolve(process.cwd(), 'database', 'schema_mysql.sql'));
   const postmanExists = fs.existsSync(path.resolve(process.cwd(), 'tests', 'Barangay_Bugo_API.postman_collection.json'));
   const backupScriptExists = fs.existsSync(path.resolve(process.cwd(), 'scripts', 'backup_mysql.sh'));
-  const deploymentGuideExists = fs.existsSync(path.resolve(process.cwd(), 'DEPLOYMENT.md'));
+  const deploymentGuideExists = fs.existsSync(path.resolve(process.cwd(), 'RENDER_STEP_BY_STEP.md'));
 
   res.json({
     status: dbHealth.connected ? 'ok' : 'degraded',
@@ -1509,28 +1509,30 @@ app.get('/api/deployment/status', async (_req, res) => {
         id: 'db-health',
         label: 'Active Persistence Engine',
         passed: dbHealth.connected,
-        detail: activePersistenceMode === 'mysql-prisma'
-          ? `Connected to MySQL via Prisma (${dbHealth.latencyMs ?? 0}ms)`
-          : 'Running in JSON local persistence mode (data/db.json); MySQL activates when DATABASE_URL is set'
+        detail: activePersistenceMode === 'postgresql-prisma'
+          ? `Connected to PostgreSQL via Prisma (${dbHealth.latencyMs ?? 0}ms)`
+          : activePersistenceMode === 'mysql-prisma'
+            ? `Connected to MySQL via Prisma (${dbHealth.latencyMs ?? 0}ms)`
+            : 'Running in JSON local persistence mode (data/db.json); Database activates when DATABASE_URL is set'
       },
       {
         id: 'prisma-schema',
         label: 'Prisma ORM Schema (prisma/schema.prisma)',
         passed: prismaSchemaExists,
-        detail: prismaSchemaExists ? '8 relational models defined for MySQL 8.0+' : 'Missing prisma/schema.prisma'
+        detail: prismaSchemaExists ? '8 relational models defined (PostgreSQL/MySQL compatible)' : 'Missing prisma/schema.prisma'
       },
       {
         id: 'mysql-ddl',
         label: 'MySQL DDL Export (database/schema_mysql.sql)',
         passed: mysqlDdlExists,
-        detail: mysqlDdlExists ? 'InnoDB + utf8mb4 DDL script ready for download/import' : 'Missing database/schema_mysql.sql'
+        detail: mysqlDdlExists ? 'InnoDB + utf8mb4 DDL script available (legacy reference)' : 'Missing database/schema_mysql.sql'
       },
       {
         id: 'prod-build',
         label: 'Production Build Bundle (dist/)',
         passed: distHtmlExists && distServerExists,
         detail: distHtmlExists && distServerExists
-          ? 'dist/index.html & dist/server.mjs compiled'
+          ? 'dist/index.html & dist/server.mjs compiled ✓'
           : 'Run "npm run build" to generate dist/index.html and dist/server.mjs'
       },
       {
@@ -1538,7 +1540,7 @@ app.get('/api/deployment/status', async (_req, res) => {
         label: 'Custom Production JWT Secret',
         passed: Boolean(process.env.JWT_SECRET && process.env.JWT_SECRET.trim() !== DEV_FALLBACK_JWT_SECRET),
         detail: process.env.JWT_SECRET && process.env.JWT_SECRET.trim() !== DEV_FALLBACK_JWT_SECRET
-          ? 'Custom JWT_SECRET environment variable configured'
+          ? 'Custom JWT_SECRET environment variable configured ✓'
           : 'Using development fallback JWT secret (set JWT_SECRET before production deployment)'
       },
       {
@@ -1546,16 +1548,16 @@ app.get('/api/deployment/status', async (_req, res) => {
         label: 'Custom Production HMAC Voucher Secret',
         passed: Boolean(process.env.HMAC_SECRET && process.env.HMAC_SECRET.trim() !== DEV_FALLBACK_HMAC_SECRET),
         detail: process.env.HMAC_SECRET && process.env.HMAC_SECRET.trim() !== DEV_FALLBACK_HMAC_SECRET
-          ? 'Custom HMAC_SECRET environment variable configured'
+          ? 'Custom HMAC_SECRET environment variable configured ✓'
           : 'Using development fallback HMAC secret (set HMAC_SECRET before production deployment)'
       },
       {
-        id: 'mysql-env',
-        label: 'MySQL DATABASE_URL Configured',
+        id: 'database-env',
+        label: 'DATABASE_URL Configured',
         passed: isMySqlConfigured(),
         detail: isMySqlConfigured()
-          ? 'MySQL connection string detected'
-          : 'Not set in current preview environment (JSON fallback active)'
+          ? 'Database connection string detected (PostgreSQL/MySQL) ✓'
+          : 'Not set in current environment (JSON fallback active)'
       },
       {
         id: 'postman-suite',
@@ -1564,19 +1566,24 @@ app.get('/api/deployment/status', async (_req, res) => {
         detail: postmanExists ? 'tests/Barangay_Bugo_API.postman_collection.json available' : 'Missing Postman collection'
       },
       {
-        id: 'backup-script',
-        label: 'Automated MySQL Backup & Docs',
-        passed: backupScriptExists && deploymentGuideExists,
-        detail: backupScriptExists && deploymentGuideExists
-          ? 'scripts/backup_mysql.sh & DEPLOYMENT.md present'
-          : 'Missing backup script or DEPLOYMENT.md'
+        id: 'deployment-docs',
+        label: 'Deployment Documentation',
+        passed: deploymentGuideExists,
+        detail: deploymentGuideExists
+          ? 'RENDER_STEP_BY_STEP.md deployment guide present ✓'
+          : 'Missing deployment documentation'
       }
+    ],
+    features: [
+      { name: 'Maps', technology: 'OpenStreetMap + Leaflet.js', apiKey: 'None required', cost: 'Free' },
+      { name: 'ID Verification', technology: 'Tesseract.js OCR', apiKey: 'None required', cost: 'Free' },
+      { name: 'Database', technology: activePersistenceMode === 'postgresql-prisma' ? 'PostgreSQL' : activePersistenceMode === 'mysql-prisma' ? 'MySQL' : 'JSON', apiKey: 'None required', cost: 'Free (Render)' }
     ],
     endpoints: [
       { method: 'GET', path: '/api/health', description: 'Server uptime & database health probe' },
-      { method: 'GET', path: '/api/database/mysql-info', description: '8-table MySQL metadata & live row counts' },
+      { method: 'GET', path: '/api/database/mysql-info', description: '8-table database metadata & live row counts' },
       { method: 'GET', path: '/api/database/schema', description: 'Full column schemas, ERD links & sanitized rows' },
-      { method: 'GET', path: '/api/database/export-sql', description: 'Download barangay_bugo_db.sql DDL' },
+      { method: 'GET', path: '/api/database/export-sql', description: 'Download database DDL export' },
       { method: 'GET', path: '/api/testing/postman-collection', description: 'Download Postman API collection JSON' },
       { method: 'POST', path: '/api/testing/run-diagnostics', description: 'Execute live server-side verification suite' },
       { method: 'GET', path: '/api/deployment/status', description: 'Runtime & production readiness diagnostics' },

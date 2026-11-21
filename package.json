@@ -19,6 +19,9 @@
     "db:backup": "bash scripts/backup_mysql.sh",
     "verify:deploy": "tsx scripts/verify_deployment.ts"
   },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
   "dependencies": {
     "@google/genai": "^3.6.1",
     "@prisma/client": "^6.6.0",

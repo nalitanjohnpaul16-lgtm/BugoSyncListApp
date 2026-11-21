@@ -1,0 +1,8 @@
+{
+  "name": "BUGO-SYNC-LIST(3)",
+  "description": "A web-based resident assistance application, tracking, and record management system for Barangay Bugo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

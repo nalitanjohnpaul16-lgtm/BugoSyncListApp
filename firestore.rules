@@ -1,0 +1,155 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Default-Deny Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Helpers
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'nalitanjohnpaul16@gmail.com' ||
+        request.auth.token.email == 'jpbn4short@gmail.com' ||
+        request.auth.token.email == 'polinar.kylenekae@gmail.com' ||
+        request.auth.token.email == 'johnpaulbn20@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidFcmToken(data) {
+      return data.keys().hasAll(['uid', 'residentId', 'contactNumber', 'token', 'platform', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['uid', 'residentId', 'contactNumber', 'token', 'platform', 'createdAt', 'updatedAt']) &&
+        isValidId(data.uid) &&
+        isValidId(data.residentId) &&
+        data.contactNumber is string &&
+        data.contactNumber.size() >= 10 &&
+        data.contactNumber.size() <= 20 &&
+        data.contactNumber.matches('^(\\+?63|0)9[0-9]{9}$') &&
+        data.token is string &&
+        data.token.size() >= 20 &&
+        data.token.size() <= 512 &&
+        data.platform is string &&
+        data.platform in ['web', 'android', 'ios'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidFcmDispatch(data) {
+      return data.keys().hasAll(['uid', 'recipientUid', 'announcementId', 'programId', 'recipientName', 'phoneNumber', 'message', 'status', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'recipientUid', 'announcementId', 'programId', 'recipientName', 'phoneNumber', 'message', 'status', 'createdAt']) &&
+        isValidId(data.uid) &&
+        isValidId(data.recipientUid) &&
+        isValidId(data.announcementId) &&
+        isValidId(data.programId) &&
+        data.recipientName is string &&
+        data.recipientName.size() >= 1 &&
+        data.recipientName.size() <= 160 &&
+        data.phoneNumber is string &&
+        data.phoneNumber.size() >= 10 &&
+        data.phoneNumber.size() <= 20 &&
+        data.phoneNumber.matches('^(\\+?63|0)9[0-9]{9}$') &&
+        data.message is string &&
+        data.message.size() >= 1 &&
+        data.message.size() <= 1000 &&
+        data.status is string &&
+        data.status in ['Sent', 'Queued', 'Failed'] &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'createdAt']) &&
+        data.email is string &&
+        data.email.size() >= 3 &&
+        data.email.size() <= 200 &&
+        data.createdAt is timestamp;
+    }
+
+    // 3. FCM Device Tokens (Strict PII & Owner Isolation)
+    match /fcm_tokens/{tokenId} {
+      allow get: if isSignedIn() && isValidId(tokenId) && (existing().uid == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isVerifiedUser() &&
+        isValidId(tokenId) &&
+        isValidFcmToken(incoming()) &&
+        incoming().uid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() &&
+        isValidId(tokenId) &&
+        isValidFcmToken(incoming()) &&
+        (
+          isAdmin() ||
+          (
+            existing().uid == request.auth.uid &&
+            incoming().uid == existing().uid &&
+            incoming().residentId == existing().residentId &&
+            incoming().createdAt == existing().createdAt &&
+            incoming().updatedAt == request.time &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['token', 'contactNumber', 'platform', 'updatedAt'])
+          )
+        );
+      allow delete: if isVerifiedUser() && isValidId(tokenId) && (existing().uid == request.auth.uid || isAdmin());
+    }
+
+    // 4. FCM Dispatch Audit Records
+    match /fcm_dispatches/{dispatchId} {
+      allow get: if isSignedIn() && isValidId(dispatchId) && (existing().recipientUid == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.recipientUid == request.auth.uid || isAdmin());
+      allow create: if isAdmin() &&
+        isValidId(dispatchId) &&
+        isValidFcmDispatch(incoming()) &&
+        incoming().uid == request.auth.uid &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(dispatchId) &&
+        isValidFcmDispatch(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().recipientUid == existing().recipientUid &&
+        incoming().createdAt == existing().createdAt &&
+        existing().status != 'Sent' &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'message']);
+      allow delete: if isAdmin() && isValidId(dispatchId);
+    }
+
+    // 5. Admin Markers
+    match /admins/{uid} {
+      allow get: if isSignedIn() && isValidId(uid) && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isValidId(uid) && isValidAdminUser(incoming()) && incoming().createdAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(uid) &&
+        isValidAdminUser(incoming()) &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['email']);
+      allow delete: if isAdmin() && isValidId(uid);
+    }
+
+    // 6. Connection Probe (Read-only for boot check)
+    match /test/{docId} {
+      allow get: if docId == 'connection';
+    }
+  }
+}

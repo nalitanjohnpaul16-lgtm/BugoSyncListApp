@@ -1,0 +1,152 @@
+{
+  "entities": {
+    "FcmDeviceToken": {
+      "title": "FcmDeviceToken",
+      "description": "Registered Firebase Cloud Messaging push token linked to a resident mobile number",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Authenticated Firebase UID owning this device token",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "residentId": {
+          "type": "string",
+          "description": "Barangay portal resident ID",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "contactNumber": {
+          "type": "string",
+          "description": "Normalized Philippine mobile number",
+          "maxLength": 20,
+          "pattern": "^(\\+?63|0)9[0-9]{9}$"
+        },
+        "token": {
+          "type": "string",
+          "description": "FCM Web or device registration token",
+          "minLength": 20,
+          "maxLength": 512
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["web", "android", "ios"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "residentId", "contactNumber", "token", "platform", "createdAt", "updatedAt"]
+    },
+    "FcmSmsDispatch": {
+      "title": "FcmSmsDispatch",
+      "description": "Audit log for schedule alerts dispatched via Firebase Cloud Messaging and SMS relay",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientUid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "announcementId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "programId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientName": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "phoneNumber": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(\\+?63|0)9[0-9]{9}$"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Sent", "Queued", "Failed"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "recipientUid", "announcementId", "programId", "recipientName", "phoneNumber", "message", "status", "createdAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized Barangay Bugo Firebase administrator marker",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["email", "createdAt"]
+    },
+    "ConnectionCheck": {
+      "title": "ConnectionCheck",
+      "description": "Connectivity verification probe document",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": ["status"]
+    }
+  },
+  "firestore": {
+    "/fcm_tokens/{tokenId}": {
+      "schema": {
+        "$ref": "#/entities/FcmDeviceToken"
+      },
+      "description": "Stores resident FCM push device tokens isolated to token owner and verified admins"
+    },
+    "/fcm_dispatches/{dispatchId}": {
+      "schema": {
+        "$ref": "#/entities/FcmSmsDispatch"
+      },
+      "description": "Stores FCM push and SMS relay delivery records"
+    },
+    "/admins/{uid}": {
+      "schema": {
+        "$ref": "#/entities/AdminUser"
+      },
+      "description": "Admin role lookup collection"
+    },
+    "/test/{docId}": {
+      "schema": {
+        "$ref": "#/entities/ConnectionCheck"
+      },
+      "description": "Read-only connection validation probe"
+    }
+  }
+}
